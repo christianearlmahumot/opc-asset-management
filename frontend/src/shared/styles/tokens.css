@@ -1,0 +1,38 @@
+/*
+ * Design tokens taken from the SDD wireframes (UI-101 to UI-404).
+ * Flat office-form style: maroon top bar, dark sidebar, warm off-white page, bordered white cards.
+ */
+:root {
+  --maroon: #7b1f2e;
+  --maroon-dark: #651826;
+  --maroon-tint: #f3e8e9;
+
+  --sidebar: #2b1e1f;
+  --sidebar-text: #e9e2e0;
+
+  --page: #f4f3f1;
+  --surface: #ffffff;
+  --surface-sunk: #ece8e5;
+
+  --line: #dcd7d3;
+  --line-strong: #c9c3be;
+
+  --text: #1e1a1a;
+  --text-muted: #6b6461;
+
+  --notice-bg: #fdf3d7;
+  --notice-line: #e0b33d;
+  --error: #a3261b;
+  --error-bg: #fbeceb;
+  --ok: #2f6b3a;
+  --ok-bg: #e9f2ea;
+
+  --radius: 8px;
+  --radius-card: 10px;
+  --field-h: 42px;
+
+  --topbar-h: 64px;
+  --sidebar-w: 248px;
+
+  --font: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}

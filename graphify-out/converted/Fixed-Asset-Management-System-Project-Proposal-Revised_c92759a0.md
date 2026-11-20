@@ -1,0 +1,138 @@
+<!-- converted from Fixed-Asset-Management-System-Project-Proposal-Revised.docx -->
+
+# Fixed-Asset Management System Project Proposal
+## Team Information
+| Field | Entry |
+| --- | --- |
+| Project Title | A Centralized Fixed-Asset Management System with OCR-Assisted Document Encoding and Transaction-Based Movement Tracking for the CIT-U Office of the Property Custodian Inventory Section |
+| Project Short Description (<20 words) | Replaces the office's Excel files with one asset register that reads invoices, automates issue orders, and tracks every transfer. |
+| Team Code | 2627-sem1-it332-09 |
+| Members | 1. Christian Earl V. Mahumot 2. Ethan James L. Saranza 3. S Brent V. Sanico 4. John Edward L. Selma 5. John Percival D. Dela Cruz |
+## Part 1: Introduction
+### Background of the problem
+The Inventory Section of the Office of the Property Custodian (OPC) at Cebu Institute of Technology – University (CIT-U) keeps the records of the university's fixed assets: laboratory equipment, machines, computers, books and other building contents assigned to every department. Four staff run the section, assisted by four Non-Academic Scholars (NAS). Its masterlist holds about 15,000 issue orders, each covering from 1 to 500 assets. The section serves all departments, works most closely with Purchasing, and handles the turnover of assets when employees resign.
+Its work follows six steps. Purchasing forwards the sales invoice, purchase order and purchase request. Staff encode each item into the masterlist spreadsheet, prepare an issue order with a photo of the item, keep a summary per department or office, record turned-over items, and print the issue order.
+Every step is done by hand in Excel. Files are kept on separate computers, formatting breaks between them, and one workbook holds many sheets that are hard to navigate. Since 2018 most POs and PRs have been printed, but some are still partly filled in by typewriter or by hand, and all of them are re-typed into the masterlist. Older assets carry physical property tags, while newer ones are identified by scanned serial numbers, and older staff find the serial-based method harder to adopt. When an item becomes defective, is damaged, or is transferred, it is deducted from one department but not added to the next. What the staff know about the files leaves with them when they resign. A previous student-built system for the office was never finished.
+The literature shows these are known risks, not local bad luck. Spreadsheet errors are widely accepted as common and costly (Powell et al., 2008). In field interviews, 44 of 45 managers had encountered spreadsheet errors, error checking was mostly informal, and most organizations had no formal spreadsheet quality policy (Caulkins et al., 2007). Inaccurate records are also widespread: 65% of nearly 370,000 inventory records in one retail study did not match physical stock (DeHoratius & Raman, 2008), and such inaccuracy lowers operational performance (Fleisch & Tellkamp, 2005). Manual encoding adds its own errors. In one experiment, visually checking typed data left 2,958% more errors than entering it twice and comparing, and was no better than not checking at all (Barchard & Pace, 2011). Losing experienced staff lowers productivity and slows work (Massingham, 2018), and relying on documents and databases alone does not prevent that loss (Daghfous et al., 2013). In state universities and colleges in Mountain Province, Philippines, manual procedures and outdated tools were found to cause substantial inefficiency in inventory management (Ayochok & Perez, 2024).
+If nothing changes, a team of four staff and four student assistants will keep spending its time re-encoding documents and building issue orders by hand. Its records will keep drifting from where assets actually are, and audits and replacement decisions will rest on numbers no one can trust.
+### Problem statement
+The OPC Inventory Section of CIT-U manages the records of about 15,000 issue orders through manual encoding into scattered Excel files. As a result, preparing issue orders is slow; transfers, turnovers and the assets of resigning employees are not reconciled between departments; and the accuracy of the records depends on individual staff.
+### Research gap
+Existing asset systems for schools mainly digitize the register itself. Examples include web-based asset records with depreciation (Setiawan et al., 2019), RFID tracking of laboratory equipment (Bandara et al., 2024), and QR-labelled equipment (Ma et al., 2021). Invoice OCR is studied separately, on commercial invoice sets outside the school setting (Ha & Horák, 2022; Manjunath et al., 2023). Among the studies reviewed, none links document capture at the point of entry with transaction-based tracking of asset movements in a single office workflow. Most also report acceptance ratings rather than before-and-after measures of time and record accuracy. This project addresses both gaps: it measures the office's current process, then tests whether OCR-assisted encoding and paired transfer transactions improve speed and record accuracy on the office's own documents.
+## Part 2: Objectives
+### General objectives
+Each objective states what the system will do for the OPC Inventory Section. All four are delivered in the minimum viable product (MVP) by December 2026, and their targets are measured against the current Excel process by March 2027, as Part 3 describes.
+- Faster, more accurate encoding. The system will read sales invoices, purchase orders and purchase requests by OCR and pre-fill the masterlist fields for staff to confirm, extracting fields with at least 85% accuracy on printed documents and cutting encoding time per document by at least 40%.
+- Faster issue orders. The system will generate printable issue orders, with item photos attached, directly from the asset register, cutting the time from a department's request to a printed issue order by at least 50%.
+- Accurate records across departments. The system will record every transfer, defective turnover, damage report and resignation turnover as one transaction with a source and a destination, so that department summaries stay consistent and the record discrepancy rate falls by at least half.
+- One lasting record that is easy to search. The system will keep every asset, with its tag or serial number, holder, condition and movement history, in one central database with user roles and an audit log, so that records no longer depend on individual staff, any asset can be found at least 50% faster than in Excel, and staff rate the system a grade of C or better (65 or higher) on the System Usability Scale (Lewis, 2018).
+### Specific objectives
+Each specific objective is one module of the system.
+- Document capture. Scan or upload a sales invoice, purchase order or purchase request; extract item, quantity, unit cost, supplier and date by OCR; and let staff confirm or correct each field before saving.
+- Asset register. Store each asset with structured fields (category, item name, brand, model number, property tag number, serial number, color, dimension or size, unit cost, photo, assigned department, accountable person, condition), flag likely duplicates on entry, and find older assets by tag number and newer ones by serial number.
+- Issue orders. Create an issue order from a department's request by selecting assets from the register, attach the item photo automatically, and generate a printable issue order.
+- Movements and turnovers. Record every transfer, defective turnover or damage report as one transaction with a source and a destination, so that a deduction from one department always adds the item somewhere else. When an employee resigns, list every asset under that employee's name so each one can be turned over.
+- Summaries and reports. Generate per-department summaries from the transaction records and export them, along with the masterlist and issue orders, to Excel or PDF.
+- Search and history. Find any asset by keyword, tag or serial number and show its current location, holder, condition and full movement history.
+- Access control and audit log. Assign roles (administrator, staff, NAS assistant, view-only), log every change with the user and time, and run scheduled backups.
+### Research questions
+- RQ1. Under the current process, how long does it take to prepare an issue order, encode a procurement document and find an asset's details, and what share of asset records do not match the asset's actual location or condition?
+- RQ2. How accurately does OCR extract the required fields from the office's printed procurement documents, and how much encoding time does staff-verified OCR save compared with manual encoding?
+- RQ3. Does the system reduce issue-order preparation time and asset retrieval time compared with the baseline?
+- RQ4. Does recording each movement as a paired transaction reduce the discrepancy between records and the assets' actual status?
+- RQ5. How do the office's staff rate the system's usability on the SUS?
+## Part 3: Methods
+### Proposed solution concept
+The project will build a web-based fixed-asset management system that replaces the office's Excel files with one central database. It mirrors the office's existing six-step workflow instead of asking staff to change how they work. Documents from Purchasing enter through OCR with staff verification, and every asset movement is stored as a transaction with a source and a destination. Department summaries are calculated from those transactions rather than kept by hand. Excel and PDF remain the outputs, so printed issue orders and reports look the way the office already uses them. The primary users are the section's four staff, one of whom acts as administrator, and its four NAS assistants. Department heads are secondary users who receive issue orders and may get view-only access to their own assets. Purchasing is the source of the input documents.
+### Development methodology
+The team will use Scrum in two-week sprints. Agile methods suit projects whose requirements are refined through frequent client contact (Dingsøyr et al., 2012), and Scrum has been used to build asset systems for universities (Setiawan et al., 2019). Each sprint ends with a demonstration to the office, whose feedback sets the next sprint's priorities. Unit and integration tests run within each sprint, and user acceptance testing with the office's staff closes each release. The MVP is built in three sprints before the semester ends. Sprint 1 (first half of November) covers the asset register, search and a trial import of part of the masterlist. Sprint 2 (second half of November) covers issue orders, movement transactions and department summaries. Sprint 3 (first half of December) covers OCR document capture, Excel and PDF export, roles and the audit log, ending with an MVP demonstration to the office. The second semester is for refinement, the full masterlist import, evaluation by March 2027, and handover by May 2027: deployment on a CIT-U server, user and admin manuals, and training for the section's staff, so the system does not depend on the student team after graduation.
+### Validation approach
+Evaluation uses a before-and-after design with the same staff and the same tasks. Baseline values are collected on the current Excel process by mid-November 2026, before the system is introduced, by continuous-observation time-and-motion study, in which an observer times each task as it happens (Lopetegui et al., 2014). The same tasks are timed again with the system. Times are compared with a paired t-test, or a Wilcoxon signed-rank test if the differences are not normally distributed.
+| Measure | Problem it tests | How it is measured | Proposed target |
+| --- | --- | --- | --- |
+| Issue-order preparation time (minutes) | Issue orders built by hand across many sheets | Time from receiving a request to a printable issue order. Because the section issues only about three orders a month, staff re-create 15 past issue orders from archived requests, first in Excel and then in the system | At least 50% shorter |
+| Encoding time per document (minutes) | Manual encoding from invoices, POs and PRs | Time to enter one document's items into the masterlist, manually vs. with OCR plus staff review, on the same 30 documents: printed, partly typewritten and partly handwritten | At least 40% shorter |
+| OCR field accuracy (%) | Manual encoding from invoices, POs and PRs | Correct fields ÷ total fields, per field type (item, quantity, unit cost, supplier, date), reported separately for printed, typewritten and handwritten documents | At least 85% on printed documents, in line with Tesseract-based invoice results of 85–95% (Manjunath et al., 2023) |
+| Record discrepancy rate (%) | Transfers and turnovers not reconciled | Spot audit of a random sample of at least 50 assets, both tagged older assets and serial-numbered newer ones: records compared with each asset's actual location, holder and condition | Half the baseline rate |
+| Asset retrieval time (seconds) | Hard-to-navigate sheets | Time to find one asset's location, holder, condition and history, for 10 assets named by the observer | At least 50% shorter, compared with QR-based equipment lookup that cut search time by about 73% (Ma et al., 2021) |
+| Masterlist data quality (count) | Inconsistent free-text item descriptions | Duplicates, records missing required fields, and inconsistent names, using completeness and consistency as data-quality dimensions (Wang & Strong, 1996; Batini et al., 2009) | Fewer than the baseline, with no missing required fields |
+| Usability (SUS score, 0–100) | Adoption by staff | SUS questionnaire after acceptance testing (Bangor et al., 2008) | 65 or higher (grade C or better; Lewis, 2018) |
+The proposed targets will be fixed once the baseline is measured in November, before any evaluation starts, so that they cannot be adjusted to fit the results.
+## Part 4: Expected System
+### Minimum viable product
+The MVP is the smallest system that lets the office stop using Excel as its record. It includes these features, each tied to one step of the office's workflow:
+| Workflow step | MVP feature |
+| --- | --- |
+| 1. Documents arrive from Purchasing | Upload or scan a sales invoice, PO or PR; OCR pre-fills the item fields; staff confirm or correct them |
+| 2. Encode into the masterlist | Asset register with structured item fields, property tag and serial numbers, photo, unit cost, department, accountable person and condition; duplicate warning |
+| 3. Create the issue order | Build an issue order from the register; the item photo is attached automatically |
+| 4. Keep department summaries | Summaries per department or office, calculated from the transaction records |
+| 5. Record turned-over items | Transfer, defective and damaged transactions, each with a source and a destination; the item's history updates automatically; a list of all assets held by a resigning employee |
+| 6. Print the issue order | Printable issue order and Excel or PDF export of the masterlist and summaries |
+Across all steps: search by keyword, property tag or serial number, user roles, an audit log of every change, and scheduled backups.
+Outside the MVP, if time allows: QR labels for each asset, replacement-priority flags for aging equipment, and view-only access for department heads.
+### High-level workflow
+
+system workflow · 8 parts, mirroring the office's six steps
+Documents from Purchasing enter the register through OCR, which staff confirm field by field. Issue orders draw assets from the register. Each transfer or turnover is saved as one transaction with a source and a destination, which updates the register, and department summaries are recalculated from those transactions before printing or export.
+## Part 5: Discussion
+### Scope
+- Assets covered: fixed assets and building contents only, including laboratory equipment, machines, computers and books. Consumables such as bond paper and office supplies are excluded, as the office does not record them as stock.
+- Users: the OPC Inventory Section's four staff and four NAS assistants. Departments receive printed issue orders; online access for department heads is optional.
+- Processes: document intake, encoding, issue orders, department summaries, transfers and turnovers, and printing or export.
+- Documents for OCR: printed sales invoices, purchase orders and purchase requests forwarded by Purchasing.
+- Data migration: a one-time import of the current masterlist of about 15,000 issue orders, cleaned of duplicates and missing fields.
+### Limitations
+- Typewritten and handwritten parts: OCR is designed for printed documents. Parts filled in by typewriter or by hand are checked and corrected by staff, and OCR accuracy on them is reported separately rather than promised.
+- Sample documents: OCR accuracy can only be tested on documents the office allows the team to use, with sensitive details removed.
+- No integration: the system does not connect to Purchasing, finance or HR systems; documents and names are entered or uploaded.
+- Hosting: deployment depends on the server and network access that the university's IT office approves.
+- Evaluation size: the office has few staff, so results come from a small number of users and tasks over a short testing period, and may not generalize to other offices.
+- No new tracking hardware: the system works with the office's existing serial scanners and buys no RFID equipment; QR labels are optional and printed on regular printers.
+### Expected contribution
+- For the office: faster issue orders and encoding, one shared record instead of copies on separate computers, and a movement history that stays when staff leave.
+- For accuracy: because each transfer or turnover is one paired transaction, department summaries stay consistent with each other by design.
+- For research: measured before-and-after evidence on time and record accuracy, and OCR field accuracy on real procurement documents from a Philippine university, rather than acceptance ratings alone.
+- For sustainability: documentation, training and deployment on a university server, so the system does not end unfinished like the previous attempt.
+## Part 6: Traceability Matrix
+Every MVP feature traces to a finding in the literature, a gap it addresses, and the research question that tests it.
+| RRL Finding/Theme | Identified Gap | Research Question | Proposed Function |
+| --- | --- | --- | --- |
+| Spreadsheet errors are common and costly (Powell et al., 2008), and are checked only informally (Caulkins et al., 2007) | Studies document the risk but rarely measure the gain from replacing spreadsheets in an office's daily work | RQ1, RQ3 | Central asset register replacing the Excel files; audit log; Excel/PDF export |
+| Inventory records are often inaccurate, which lowers performance (DeHoratius & Raman, 2008; Fleisch & Tellkamp, 2005) | Reviewed school asset systems do not measure record accuracy before and after | RQ1, RQ4 | Movement transactions with a source and a destination; summaries calculated from them |
+| Manual data entry produces errors that visual checking does not catch (Barchard & Pace, 2011) | Encoding from procurement documents in school offices remains manual | RQ2 | OCR document capture with staff verification of each field |
+| OCR extracts invoice fields with about 85–95% accuracy (Ha & Horák, 2022; Manjunath et al., 2023), using open engines such as Tesseract (Smith, 2007) | Accuracy on a Philippine university's own invoices, POs and PRs is untested | RQ2 | OCR field extraction, measured per field type and per document type |
+| Software bots can take over repetitive clerical steps (Syed et al., 2020; van der Aalst et al., 2018) | Issue orders are still assembled by hand | RQ3 | Issue orders generated from the register, with item photos attached automatically |
+| Data quality depends on completeness and consistency (Wang & Strong, 1996; Batini et al., 2009) | Free-text item descriptions create duplicates and inconsistent names | RQ1, RQ3 | Structured item fields with fixed categories and duplicate warnings |
+| Tagging with a central database speeds equipment lookup and supports accountability (Ma et al., 2021; Bandara et al., 2024) | Staff cannot quickly find an asset's location, holder and history | RQ3 | Search by keyword, serial or tag, with full movement history |
+| Asset value depends on managing the whole life cycle (Schuman & Brent, 2005; Setiawan et al., 2019) | Turnovers and transfers end the record trail in the current files | RQ4 | Defective, damaged and transfer transactions that keep each asset's history intact |
+| Knowledge leaves with staff, and documents alone do not prevent this (Massingham, 2018; Daghfous et al., 2013) | A previous system was left unfinished and the files depend on individual staff | RQ5 | Roles, manuals, training and deployment on a university server |
+| Manual procedures cause inefficiency in inventory management at Philippine state universities and colleges (Ayochok & Perez, 2024) | Few local studies report measured improvement after digitization | RQ1, RQ3 | Before-and-after time-and-motion evaluation (Lopetegui et al., 2014) |
+| Perceived usefulness and ease of use predict whether users accept a system (Davis, 1989); system quality shapes use and user satisfaction (DeLone & McLean, 2003); the SUS is a reliable usability measure (Bangor et al., 2008; Lewis, 2018) | Older staff already find serial-based tracking harder to adopt, and how they would rate a replacement for Excel is unknown | RQ5 | Interface designed with staff in each Scrum sprint (Dingsøyr et al., 2012); SUS evaluation |
+## Part 7: References
+The list has 25 sources: 21 journal articles in indexed journals, 3 conference papers (Bandara et al., 2024; Setiawan et al., 2019; Smith, 2007), and 1 article in a non-indexed journal (Ayochok & Perez, 2024). There are no websites.
+Ayochok, J., & Perez, C. (2024). Enhancement of inventory management system of state universities and colleges in Mountain Province. East Asian Journal of Multidisciplinary Research, 3(10), 4627–4646. https://doi.org/10.55927/eajmr.v3i10.11278
+Bandara, I., Simpson, O., & Sun, Y. (2024). Optimizing efficiency using a low-cost RFID-based inventory management system. In 2024 International Wireless Communications and Mobile Computing (IWCMC) (pp. 1729–1733). IEEE. https://doi.org/10.1109/IWCMC61514.2024.10592581
+Bangor, A., Kortum, P. T., & Miller, J. T. (2008). An empirical evaluation of the System Usability Scale. International Journal of Human–Computer Interaction, 24(6), 574–594. https://doi.org/10.1080/10447310802205776
+Barchard, K. A., & Pace, L. A. (2011). Preventing human error: The impact of data entry methods on data accuracy and statistical results. Computers in Human Behavior, 27(5), 1834–1839. https://doi.org/10.1016/j.chb.2011.04.004
+Batini, C., Cappiello, C., Francalanci, C., & Maurino, A. (2009). Methodologies for data quality assessment and improvement. ACM Computing Surveys, 41(3), Article 16. https://doi.org/10.1145/1541880.1541883
+Caulkins, J. P., Morrison, E. L., & Weidemann, T. (2007). Spreadsheet errors and decision making: Evidence from field interviews. Journal of Organizational and End User Computing, 19(3), 1–23. https://doi.org/10.4018/joeuc.2007070101
+Daghfous, A., Belkhodja, O., & Angell, L. C. (2013). Understanding and managing knowledge loss. Journal of Knowledge Management, 17(5), 639–660. https://doi.org/10.1108/JKM-12-2012-0394
+Davis, F. D. (1989). Perceived usefulness, perceived ease of use, and user acceptance of information technology. MIS Quarterly, 13(3), 319–340. https://doi.org/10.2307/249008
+DeHoratius, N., & Raman, A. (2008). Inventory record inaccuracy: An empirical analysis. Management Science, 54(4), 627–641. https://doi.org/10.1287/mnsc.1070.0789
+DeLone, W. H., & McLean, E. R. (2003). The DeLone and McLean model of information systems success: A ten-year update. Journal of Management Information Systems, 19(4), 9–30. https://doi.org/10.1080/07421222.2003.11045748
+Dingsøyr, T., Nerur, S., Balijepally, V., & Moe, N. B. (2012). A decade of agile methodologies: Towards explaining agile software development. Journal of Systems and Software, 85(6), 1213–1221. https://doi.org/10.1016/j.jss.2012.02.033
+Fleisch, E., & Tellkamp, C. (2005). Inventory inaccuracy and supply chain performance: A simulation study of a retail supply chain. International Journal of Production Economics, 95(3), 373–385. https://doi.org/10.1016/j.ijpe.2004.02.003
+Ha, H. T., & Horák, A. (2022). Information extraction from scanned invoice images using text analysis and layout features. Signal Processing: Image Communication, 102, Article 116601. https://doi.org/10.1016/j.image.2021.116601
+Lewis, J. R. (2018). The System Usability Scale: Past, present, and future. International Journal of Human–Computer Interaction, 34(7), 577–590. https://doi.org/10.1080/10447318.2018.1455307
+Lopetegui, M., Yen, P.-Y., Lai, A., Jeffries, J., Embi, P., & Payne, P. (2014). Time motion studies in healthcare: What are we talking about? Journal of Biomedical Informatics, 49, 292–299. https://doi.org/10.1016/j.jbi.2014.02.017
+Ma, L., Mu, Y., Wei, L., & Wang, X. (2021). Practical application of QR code electronic manuals in equipment management and training. Frontiers in Public Health, 9, Article 726063. https://doi.org/10.3389/fpubh.2021.726063
+Manjunath, A. A., Nayak, M. S., Nishith, S., Pandit, S. N., Sunkad, S., Deenadhayalan, P., & Gangadhara, S. (2023). Automated invoice data extraction using image processing. IAES International Journal of Artificial Intelligence, 12(2), 514–521. https://doi.org/10.11591/ijai.v12.i2.pp514-521
+Massingham, P. R. (2018). Measuring the impact of knowledge loss: A longitudinal study. Journal of Knowledge Management, 22(4), 721–758. https://doi.org/10.1108/JKM-08-2016-0338
+Powell, S. G., Baker, K. R., & Lawson, B. (2008). A critical review of the literature on spreadsheet errors. Decision Support Systems, 46(1), 128–138. https://doi.org/10.1016/j.dss.2008.06.001
+Schuman, C. A., & Brent, A. C. (2005). Asset life cycle management: Towards improving physical asset performance in the process industry. International Journal of Operations & Production Management, 25(6), 566–579. https://doi.org/10.1108/01443570510599728
+Setiawan, R., Kurniadi, D., Aulawi, H., & Kurniawati, R. (2019). Asset management information system for higher education. Journal of Physics: Conference Series, 1402(2), Article 022083. https://doi.org/10.1088/1742-6596/1402/2/022083
+Smith, R. (2007). An overview of the Tesseract OCR engine. In Ninth International Conference on Document Analysis and Recognition (ICDAR 2007) (pp. 629–633). IEEE. https://doi.org/10.1109/ICDAR.2007.4376991
+Syed, R., Suriadi, S., Adams, M., Bandara, W., Leemans, S. J. J., Ouyang, C., ter Hofstede, A. H. M., van de Weerd, I., Wynn, M. T., & Reijers, H. A. (2020). Robotic process automation: Contemporary themes and challenges. Computers in Industry, 115, Article 103162. https://doi.org/10.1016/j.compind.2019.103162
+van der Aalst, W. M. P., Bichler, M., & Heinzl, A. (2018). Robotic process automation. Business & Information Systems Engineering, 60(4), 269–272. https://doi.org/10.1007/s12599-018-0542-4
+Wang, R. Y., & Strong, D. M. (1996). Beyond accuracy: What data quality means to data consumers. Journal of Management Information Systems, 12(4), 5–33. https://doi.org/10.1080/07421222.1996.11518099

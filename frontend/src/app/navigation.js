@@ -1,0 +1,23 @@
+/*
+ * The sidebar of the wireframes, in their order, with the roles allowed to see each item
+ * (SRS 2.2 permissions table). `ready: false` items show a "not built yet" page until their build step lands.
+ */
+export const ROLES = {
+  ADMIN: 'ADMIN',
+  STAFF: 'STAFF',
+  NAS: 'NAS',
+  DEPT_HEAD: 'DEPT_HEAD',
+}
+
+const { ADMIN, STAFF, NAS, DEPT_HEAD } = ROLES
+
+export const NAV = [
+  { to: '/', label: 'Dashboard', roles: null, ready: true, end: true },
+  { to: '/documents', label: 'Document Capture', roles: [ADMIN, STAFF, NAS], ready: false, step: 7 },
+  { to: '/assets', label: 'Asset Register', roles: [ADMIN, STAFF, NAS, DEPT_HEAD], ready: false, step: 2 },
+  { to: '/issue-orders', label: 'Issue Orders', roles: [ADMIN, STAFF], ready: false, step: 4 },
+  { to: '/movements', label: 'Movements', roles: [ADMIN, STAFF], ready: false, step: 3 },
+  { to: '/reports', label: 'Summaries & Reports', roles: [ADMIN, STAFF, DEPT_HEAD], ready: false, step: 5 },
+  { to: '/users', label: 'Users', roles: [ADMIN], ready: true },
+  { to: '/audit-log', label: 'Audit Log', roles: [ADMIN], ready: false, step: 6 },
+]

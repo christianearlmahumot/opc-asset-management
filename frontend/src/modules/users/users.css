@@ -1,0 +1,27 @@
+.users-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 22px;
+  align-items: start;
+}
+.users-layout.with-panel {
+  grid-template-columns: minmax(0, 1.65fr) minmax(340px, 1fr);
+}
+
+.user-panel {
+  position: sticky;
+  top: calc(var(--topbar-h) + 24px);
+}
+
+.section-title {
+  font-size: 16px;
+  margin: 0 0 10px;
+}
+
+.account-line {
+  margin: 0 0 12px;
+}
+
+.link-btn.danger {
+  color: var(--error);
+}

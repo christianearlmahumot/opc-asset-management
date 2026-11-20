@@ -1,0 +1,17 @@
+# Local development database. Supabase is used when deployed.
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: fams-db
+    environment:
+      POSTGRES_DB: fams
+      POSTGRES_USER: fams
+      POSTGRES_PASSWORD: fams
+      TZ: Asia/Manila
+    ports:
+      - "5432:5432"
+    volumes:
+      - fams-db-data:/var/lib/postgresql/data
+
+volumes:
+  fams-db-data:

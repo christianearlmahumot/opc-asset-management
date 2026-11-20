@@ -1,0 +1,99 @@
+.shell {
+  display: grid;
+  grid-template-columns: var(--sidebar-w) 1fr;
+  grid-template-rows: var(--topbar-h) 1fr;
+  grid-template-areas:
+    'top top'
+    'side main';
+  min-height: 100%;
+}
+
+/* ---------------------------------------------------------------- top bar */
+.topbar {
+  grid-area: top;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--maroon);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+}
+.topbar-title {
+  font-size: 21px;
+  font-weight: 700;
+  letter-spacing: -0.005em;
+}
+
+.user-menu {
+  position: relative;
+}
+.user-menu-btn {
+  background: none;
+  border: 0;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 8px 4px;
+}
+.user-menu-pop {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  min-width: 160px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 6px;
+  color: var(--text);
+}
+.user-menu-pop button {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: 0;
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.user-menu-pop button:hover {
+  background: var(--page);
+}
+
+/* ---------------------------------------------------------------- sidebar */
+.sidebar {
+  grid-area: side;
+  background: var(--sidebar);
+  padding: 20px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  position: sticky;
+  top: var(--topbar-h);
+  height: calc(100vh - var(--topbar-h));
+}
+.nav-item {
+  display: block;
+  padding: 11px 14px;
+  border-radius: var(--radius);
+  color: var(--sidebar-text);
+  text-decoration: none;
+  font-size: 16px;
+}
+.nav-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+.nav-item.active {
+  background: var(--maroon);
+  color: #fff;
+  font-weight: 700;
+}
+
+/* ---------------------------------------------------------------- content */
+.content {
+  grid-area: main;
+  padding: 32px 36px 48px;
+  min-width: 0;
+}

@@ -1,0 +1,229 @@
+/* ---------------------------------------------------------------- page header */
+.page-header {
+  margin-bottom: 24px;
+}
+.page-header h1 {
+  font-size: 30px;
+  line-height: 1.2;
+}
+.page-header p {
+  margin: 6px 0 0;
+  color: var(--text-muted);
+  font-size: 16px;
+}
+
+/* ---------------------------------------------------------------- card */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  padding: 24px;
+}
+.card-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 4px;
+}
+.card-sub {
+  color: var(--text-muted);
+  margin: 0 0 16px;
+}
+
+/* ---------------------------------------------------------------- buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 22px;
+  border-radius: var(--radius);
+  border: 1px solid transparent;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.btn-primary {
+  background: var(--maroon);
+  color: #fff;
+}
+.btn-primary:hover:not(:disabled) {
+  background: var(--maroon-dark);
+}
+.btn-secondary {
+  background: var(--surface);
+  border-color: var(--line-strong);
+  color: var(--text);
+}
+.btn-secondary:hover:not(:disabled) {
+  background: var(--page);
+}
+.btn-block {
+  width: 100%;
+}
+
+/* ---------------------------------------------------------------- form fields: label above input */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+.field-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+.field-input {
+  height: var(--field-h);
+  padding: 0 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+  width: 100%;
+}
+textarea.field-input {
+  height: auto;
+  min-height: 88px;
+  padding: 10px 14px;
+  resize: vertical;
+}
+.field-input:focus {
+  outline: none;
+  border-color: var(--maroon);
+  box-shadow: 0 0 0 3px rgba(123, 31, 46, 0.12);
+}
+.field-input[readonly] {
+  background: var(--page);
+}
+.field.has-error .field-input {
+  border-color: var(--error);
+}
+.field-error {
+  color: var(--error);
+  font-size: 13px;
+}
+.field-hint {
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+/* ---------------------------------------------------------------- notices (amber box in the wireframes) */
+.notice {
+  border: 1px solid var(--notice-line);
+  background: var(--notice-bg);
+  border-radius: var(--radius);
+  padding: 12px 18px;
+}
+.notice-error {
+  border-color: #d9a29c;
+  background: var(--error-bg);
+  color: var(--error);
+}
+.notice-ok {
+  border-color: #a9c9ad;
+  background: var(--ok-bg);
+  color: var(--ok);
+}
+
+/* ---------------------------------------------------------------- condition / status pill */
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--maroon-tint);
+  font-size: 13px;
+  line-height: 1.35;
+}
+.badge-muted {
+  background: var(--surface-sunk);
+}
+
+/* ---------------------------------------------------------------- select (native, styled like the inputs) */
+select.field-input {
+  appearance: none;
+  padding-right: 36px;
+  background-image: linear-gradient(45deg, transparent 50%, var(--text) 50%),
+    linear-gradient(135deg, var(--text) 50%, transparent 50%);
+  background-position: calc(100% - 19px) 50%, calc(100% - 14px) 50%;
+  background-size: 5px 5px;
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
+
+/* ---------------------------------------------------------------- tables (plain ruled rows, as in the wireframes) */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.table th {
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-muted);
+  font-size: 14px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line-strong);
+}
+.table td {
+  padding: 12px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: middle;
+}
+.table tr.clickable {
+  cursor: pointer;
+}
+.table tr.clickable:hover td {
+  background: #faf9f8;
+}
+.table tr.selected td {
+  background: var(--maroon-tint);
+}
+.table .empty {
+  color: var(--text-muted);
+  text-align: center;
+  padding: 28px 12px;
+}
+.muted {
+  color: var(--text-muted);
+}
+
+/* ---------------------------------------------------------------- inline link-style button */
+.link-btn {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--maroon);
+  font-weight: 600;
+  cursor: pointer;
+}
+.link-btn:hover {
+  text-decoration: underline;
+}
+
+.divider {
+  border: 0;
+  border-top: 1px solid var(--line);
+  margin: 22px 0 18px;
+}
+
+/* ---------------------------------------------------------------- layout helpers */
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 22px;
+}

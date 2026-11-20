@@ -1,0 +1,32 @@
+{
+  "graphify-out/converted/Fixed-Asset-Management-System-Project-Proposal-Revised_c92759a0.md": {
+    "mtime": 1795148540.1135576,
+    "seen": 1795148801.6982536,
+    "ast_hash": "67ae759a9940336c3fcb2deefb0eb72c",
+    "semantic_hash": "67ae759a9940336c3fcb2deefb0eb72c"
+  },
+  "graphify-out/converted/Fixed-Asset-Management-System-Review-of-Related-Literature (1)_d4d83ca4.md": {
+    "mtime": 1795148540.1530106,
+    "seen": 1795148801.6982617,
+    "ast_hash": "b02bbb6f48ea810bbac35bf5a621f23d",
+    "semantic_hash": "b02bbb6f48ea810bbac35bf5a621f23d"
+  },
+  "graphify-out/converted/SDD-OPC-Fixed-Asset-Management-System_176d8957.md": {
+    "mtime": 1795148540.54875,
+    "seen": 1795148801.6982648,
+    "ast_hash": "e0985bf5254eee2d6f02c212793b6fcb",
+    "semantic_hash": "e0985bf5254eee2d6f02c212793b6fcb"
+  },
+  "graphify-out/converted/SRS-OPC-Fixed-Asset-Management-System_fdbf8f95.md": {
+    "mtime": 1795148540.764997,
+    "seen": 1795148801.698267,
+    "ast_hash": "1bbab080d61c5ad61a4b12f327d1421b",
+    "semantic_hash": "1bbab080d61c5ad61a4b12f327d1421b"
+  },
+  "graphify-out/converted/Software-Design-Document-Centralized-Fixed-Asset-Management-System_65d127bf.md": {
+    "mtime": 1795148540.806416,
+    "seen": 1795148801.6982687,
+    "ast_hash": "e9b1feeb9dd16ce6211c55aa0e7cd104",
+    "semantic_hash": "e9b1feeb9dd16ce6211c55aa0e7cd104"
+  }
+}
