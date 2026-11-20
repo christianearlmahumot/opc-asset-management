@@ -1,7 +1,9 @@
 package edu.citu.opc.fams.asset;
 
+import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
@@ -25,4 +27,13 @@ public interface AssetRepository extends JpaRepository<Asset, Long>, JpaSpecific
 
     @Query("select a.propertyTagNo from Asset a where upper(a.propertyTagNo) like upper(concat(:prefix, '%'))")
     List<String> findTagsStartingWith(String prefix);
+
+    /** SELECT … FOR UPDATE: two people cannot move the same item at the same moment. */
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("select a from Asset a where a.id = :id")
+    Optional<Asset> findForUpdate(Long id);
+
+    List<Asset> findByEmployeeIdAndStatusOrderByDepartmentIdAscRoomAscIdAsc(Long employeeId, AssetStatus status);
+
+    List<Asset> findByParentAssetId(Long parentAssetId);
 }

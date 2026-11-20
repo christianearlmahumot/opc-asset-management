@@ -1,6 +1,8 @@
 package edu.citu.opc.fams.movement;
 
 import edu.citu.opc.fams.access.CurrentUser;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,5 +35,10 @@ public class MovementLedger {
     @Transactional(readOnly = true)
     public List<Movement> history(Long assetId) {
         return repo.findByAssetIdOrderByRecordedAtDescIdDesc(assetId);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Movement> search(MovementType type, Long departmentId, int page, int size) {
+        return repo.search(type, departmentId, PageRequest.of(Math.max(page, 0), Math.min(Math.max(size, 1), 100)));
     }
 }

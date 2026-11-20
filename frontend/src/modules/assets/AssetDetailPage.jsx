@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
-import { Button, Card, Notice, PageHeader } from '../../shared/ui'
+import { Button, Card, Field, Notice, PageHeader } from '../../shared/ui'
 import { dash, formatDate, formatDateTime, formatMoney } from '../../shared/format'
+import { movementsApi, today } from '../movements/movementsApi'
 import { assetsApi } from './assetsApi'
 import { AssetPhoto, ConditionBadge, HistoryList, StatusBadge } from './parts'
 import './assets.css'
@@ -21,6 +22,7 @@ export default function AssetDetailPage() {
 
   useEffect(() => {
     setError('')
+    setFlash(location.state?.flash ?? '')
     assetsApi.get(id).then(setAsset).catch((e) => setError(e.message))
     assetsApi.history(id)
       .then((entries) => setHistory({ loading: false, entries }))
@@ -44,6 +46,8 @@ export default function AssetDetailPage() {
   if (!asset) return <p className="muted">Loading…</p>
 
   const isDraft = asset.status === 'DRAFT'
+  const canMove = can(['ADMIN', 'STAFF']) && !isDraft && asset.status !== 'DISPOSED'
+  const canDispose = can(['ADMIN', 'STAFF']) && (asset.status === 'TURNED_OVER' || asset.status === 'IN_STORAGE')
   const canEdit = asset.status !== 'DISPOSED' && (can(['ADMIN', 'STAFF']) || (user.role === 'NAS' && isDraft))
   const where = asset.departmentCode
     ? `${asset.departmentCode}${asset.departmentName ? ` · ${asset.departmentName}` : ''}`
@@ -59,6 +63,14 @@ export default function AssetDetailPage() {
             <Button variant="secondary" onClick={() => navigate(-1)}>Back</Button>
             {isDraft && can(['ADMIN', 'STAFF']) && (
               <Button disabled={busy} onClick={confirmDraft}>Confirm draft</Button>
+            )}
+            {canMove && asset.status === 'ISSUED' && (
+              <Button variant="secondary" onClick={() => navigate(`/movements/transfer/${asset.id}`)}>Transfer</Button>
+            )}
+            {canMove && (
+              <Button variant="secondary" onClick={() => navigate(`/movements/condition/${asset.id}`)}>
+                {asset.status === 'ISSUED' ? 'Condition / Turnover' : 'Record condition'}
+              </Button>
             )}
             {canEdit && <Button onClick={() => navigate(`/assets/${asset.id}/edit`)}>Edit</Button>}
           </>
@@ -104,12 +116,15 @@ export default function AssetDetailPage() {
                 <Item label="Split from" value={<Link to={`/assets/${asset.parentAssetId}`}>Original item</Link>} />
               )}
             </dl>
-            {!isDraft && can(['ADMIN', 'STAFF']) && (
-              <p className="muted" style={{ margin: '16px 0 0', fontSize: 14 }}>
-                Transfers and turnovers are recorded under Movements (Step 3).
-              </p>
-            )}
           </Card>
+
+          {canDispose && (
+            <DisposalCard asset={asset} onDone={(updated, entries) => {
+              setAsset(updated)
+              setHistory({ loading: false, entries })
+              setFlash('Disposal recorded.')
+            }} />
+          )}
         </div>
 
         <div className="stack side-panel" style={{ gap: 22 }}>
@@ -127,6 +142,51 @@ export default function AssetDetailPage() {
         </div>
       </div>
     </>
+  )
+}
+
+/** UC-302 step 6: when OPC disposes of a turned-over item, the disposal date is recorded. */
+function DisposalCard({ asset, onDone }) {
+  const [open, setOpen] = useState(false)
+  const [date, setDate] = useState(today())
+  const [note, setNote] = useState('')
+  const [error, setError] = useState('')
+  const [busy, setBusy] = useState(false)
+
+  async function submit(e) {
+    e.preventDefault()
+    if (!date) return setError('Enter the disposal date.')
+    setBusy(true)
+    setError('')
+    try {
+      await movementsApi.disposal({ assetId: asset.id, disposalDate: date, note })
+      const [updated, entries] = await Promise.all([assetsApi.get(asset.id), assetsApi.history(asset.id)])
+      onDone(updated, entries)
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  return (
+    <Card title="Disposal" subtitle="Record the date when OPC disposes of this item. It then leaves the active register.">
+      {!open ? (
+        <Button variant="secondary" onClick={() => setOpen(true)}>Record disposal date</Button>
+      ) : (
+        <form className="stack" style={{ gap: 14 }} onSubmit={submit} noValidate>
+          <div className="grid-2">
+            <Field label="Disposal date" required type="date" value={date} max={today()} onChange={(e) => setDate(e.target.value)} />
+            <Field label="Note" value={note} onChange={(e) => setNote(e.target.value)} placeholder="e.g. Sold as scrap" />
+          </div>
+          {error && <Notice tone="error">{error}</Notice>}
+          <div className="row">
+            <Button type="submit" disabled={busy}>{busy ? 'Saving…' : 'Confirm disposal'}</Button>
+            <Button variant="secondary" onClick={() => setOpen(false)}>Cancel</Button>
+          </div>
+        </form>
+      )}
+    </Card>
   )
 }
 

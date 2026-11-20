@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { Badge } from '../../shared/ui'
 import { formatDate } from '../../shared/format'
 import { assetsApi } from './assetsApi'
@@ -24,6 +25,7 @@ export function HistoryList({ entries, loading }) {
         <li key={h.id}>
           <span className="num">{formatDate(h.at)}</span> · <strong>{h.typeLabel}</strong>
           {h.summary && h.summary !== h.typeLabel && <> · {h.summary}</>}
+          {h.splitAssetId && <> · <Link to={`/assets/${h.splitAssetId}`}>open split item</Link></>}
           {h.recordedBy && <div className="history-by">recorded by {h.recordedBy}</div>}
         </li>
       ))}

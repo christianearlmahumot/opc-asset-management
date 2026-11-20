@@ -30,6 +30,6 @@ public final class AssetViews {
 
     /** One line of the movement history, newest first (UC-205 step 5). */
     public record HistoryEntry(Long id, OffsetDateTime at, String type, String typeLabel, int quantity,
-                               String summary, String recordedBy) {
+                               String summary, String recordedBy, Long splitAssetId) {
     }
 }

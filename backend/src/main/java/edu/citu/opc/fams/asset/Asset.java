@@ -90,6 +90,47 @@ public class Asset {
         this.employeeId = employeeId;
     }
 
+    /** Changes custody. Only AssetCustodyService calls this, always together with a movement (REQ-306). */
+    void moveCustody(Long departmentId, String room, Long employeeId) {
+        this.departmentId = departmentId;
+        this.room = room;
+        this.employeeId = employeeId;
+    }
+
+    /**
+     * Splits {@code qty} off this item as a new asset (UC-301 step 5: "splits off the transferred quantity
+     * as a new item"). The new item copies the descriptive fields, has no tag or serial (those identify
+     * the original), and points back to this one.
+     */
+    Asset splitOff(int qty, Long createdBy) {
+        if (qty <= 0 || qty >= quantity) {
+            throw new IllegalArgumentException("Split quantity must be between 1 and " + (quantity - 1));
+        }
+        Asset c = new Asset(createdBy);
+        c.description = description;
+        c.categoryId = categoryId;
+        c.brand = brand;
+        c.modelNo = modelNo;
+        c.color = color;
+        c.dimension = dimension;
+        c.quantity = qty;
+        c.unit = unit;
+        c.acquisitionDate = acquisitionDate;
+        c.unitCost = unitCost;
+        c.supplier = supplier;
+        c.invoiceNo = invoiceNo;
+        c.departmentId = departmentId;
+        c.room = room;
+        c.employeeId = employeeId;
+        c.condition = condition;
+        c.status = status;
+        c.issueOrderLineId = issueOrderLineId;
+        c.sourceDocumentId = sourceDocumentId;
+        c.parentAssetId = id;
+        this.quantity -= qty;
+        return c;
+    }
+
     /** Snapshot for the audit log (old and new values, REQ-404). */
     Map<String, Object> auditValues() {
         Map<String, Object> m = new LinkedHashMap<>();
@@ -113,6 +154,7 @@ public class Asset {
         m.put("condition", condition.name());
         m.put("status", status.name());
         m.put("photoPath", photoPath);
+        m.put("parentAssetId", parentAssetId);
         return m;
     }
 

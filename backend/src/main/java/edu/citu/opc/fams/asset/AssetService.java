@@ -259,7 +259,17 @@ public class AssetService {
     @Transactional(readOnly = true)
     public List<AssetViews.HistoryEntry> history(Long id) {
         getVisible(id);
-        List<Movement> moves = ledger.history(id);
+        List<Movement> moves = new ArrayList<>(ledger.history(id));
+        // Parts split off this item: show the move that created each one (its oldest movement).
+        Map<Long, Asset> children = new java.util.HashMap<>();
+        for (Asset child : repo.findByParentAssetId(id)) {
+            List<Movement> ch = ledger.history(child.getId());
+            if (!ch.isEmpty()) {
+                moves.add(ch.get(ch.size() - 1));
+                children.put(child.getId(), child);
+            }
+        }
+        moves.sort(java.util.Comparator.comparing(Movement::getRecordedAt).thenComparing(Movement::getId).reversed());
         Set<Long> deptIds = new HashSet<>();
         Set<Long> empIds = new HashSet<>();
         Set<Long> userIds = new HashSet<>();
@@ -271,8 +281,14 @@ public class AssetService {
         Map<Long, Department> d = departments.byIds(deptIds);
         Map<Long, Employee> e = employees.byIds(empIds);
         Map<Long, String> u = userDirectory.namesByIds(userIds);
-        return moves.stream().map(m -> new AssetViews.HistoryEntry(m.getId(), m.getRecordedAt(), m.getType().name(),
-                m.getType().label(), m.getQuantity(), MovementText.summary(m, d, e), u.get(m.getRecordedBy()))).toList();
+        return moves.stream().map(m -> {
+            Asset child = m.getAssetId().equals(id) ? null : children.get(m.getAssetId());
+            String label = child == null ? m.getType().label() : "Split off";
+            String summary = MovementText.summary(m, d, e);
+            if (child != null) summary = m.getQuantity() + " " + child.getUnit() + " · " + m.getType().label() + " · " + summary;
+            return new AssetViews.HistoryEntry(m.getId(), m.getRecordedAt(), m.getType().name(), label,
+                    m.getQuantity(), summary, u.get(m.getRecordedBy()), child == null ? null : child.getId());
+        }).toList();
     }
 
     // ------------------------------------------------------------------ photo

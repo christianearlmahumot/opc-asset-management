@@ -93,6 +93,16 @@ public class EmployeeService {
         return e;
     }
 
+    /** UC-303: after the last item has been turned over, the person is marked Resigned. */
+    @Transactional
+    public void markResigned(Long id) {
+        Employee e = get(id);
+        if (e.getStatus() == Employee.Status.RESIGNED) return;
+        var before = e.auditValues();
+        e.setStatus(Employee.Status.RESIGNED);
+        audit.recordChanges("employee", id, before, e.auditValues());
+    }
+
     private void checkDepartment(Long departmentId) {
         if (departmentId != null && !departments.exists(departmentId)) {
             throw ApiException.field("departmentId", "The selected department does not exist.");

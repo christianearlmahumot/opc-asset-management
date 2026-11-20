@@ -1,0 +1,62 @@
+/* ---------------------------------------------------------------- UI-301 from → to */
+.transfer-sides {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 22px;
+  align-items: center;
+  margin-bottom: 22px;
+}
+.transfer-arrow {
+  font-size: 30px;
+  line-height: 1;
+  color: var(--text);
+}
+
+/* ---------------------------------------------------------------- UI-302 */
+.condition-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 2.1fr) minmax(260px, 1fr);
+  gap: 22px;
+  align-items: start;
+}
+.choice-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.choice {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: var(--maroon-tint);
+  cursor: pointer;
+  font-size: 15px;
+}
+.choice input {
+  accent-color: var(--maroon);
+  margin: 0;
+}
+.reason-list {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+}
+.reason-list li {
+  padding: 7px 0;
+}
+
+/* ---------------------------------------------------------------- tables with inputs in cells */
+.table td .field-input {
+  height: 38px;
+}
+.row-error td {
+  background: var(--error-bg);
+}
+
+/* ---------------------------------------------------------------- movements list */
+.move-type {
+  white-space: nowrap;
+  font-weight: 600;
+}
