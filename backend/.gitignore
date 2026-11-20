@@ -34,3 +34,6 @@ build/
 
 ### secrets ###
 .env
+
+### uploaded files (dev storage) ###
+uploads/

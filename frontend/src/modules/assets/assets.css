@@ -1,0 +1,102 @@
+/* ---------------------------------------------------------------- search (UI-205) */
+.search-bar {
+  display: flex;
+  gap: 14px;
+}
+.search-bar .field-input {
+  flex: 1;
+}
+.search-filters {
+  display: flex;
+  gap: 12px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+.search-filters .field-input {
+  width: auto;
+  min-width: 170px;
+}
+
+.asset-table td {
+  font-size: 14.5px;
+}
+.asset-table .tag {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------------------------------------------------------------- history list */
+.history {
+  margin: 0;
+  padding-left: 18px;
+}
+.history li {
+  margin-bottom: 10px;
+}
+.history-by {
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+/* ---------------------------------------------------------------- form (UI-104 / UI-106) */
+.asset-form-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 2.2fr) minmax(300px, 1fr);
+  gap: 22px;
+  align-items: start;
+}
+.asset-form-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px 22px;
+}
+.span-4 { grid-column: span 4; }
+.span-2 { grid-column: span 2; }
+.span-1 { grid-column: span 1; }
+
+.photo-box {
+  aspect-ratio: 4 / 3;
+  background: var(--surface-sunk);
+  border-radius: var(--radius);
+  display: grid;
+  place-items: center;
+  color: var(--text-muted);
+  text-align: center;
+  padding: 12px;
+}
+.photo-img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  display: block;
+}
+.photo-drop {
+  cursor: pointer;
+  border: 1px dashed var(--line-strong);
+}
+.photo-drop:hover {
+  border-color: var(--maroon);
+}
+
+.locked-note {
+  grid-column: span 4;
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: -6px;
+}
+
+.dup-list {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  font-size: 14px;
+}
+
+/* ---------------------------------------------------------------- detail */
+.asset-detail-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(300px, 1fr);
+  gap: 22px;
+  align-items: start;
+}

@@ -63,6 +63,6 @@ api.interceptors.response.use(
         : !err.response
           ? 'Cannot reach the server. Check your connection.'
           : 'Something went wrong.')
-    return Promise.reject({ status, message, fields: body?.fields || {} })
+    return Promise.reject({ status, message, fields: body?.fields || {}, details: body?.details })
   },
 )

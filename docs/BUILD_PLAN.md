@@ -111,7 +111,7 @@ Core functions come first. OCR and Excel import depend on a working asset regist
 | Step | Scope | Status |
 |---|---|---|
 | **1. Foundation + Accounts** | Repo layout, Supabase DB, full Flyway schema (ERD), login + JWT + RBAC, audit service, app shell; user accounts (UC-402): admin creates users with temporary passwords, forced password change, edit role/department, reset password, deactivate/reactivate | **done** |
-| **2. Reference data + Asset Register** | Departments, employees, categories; Add, Edit, Search and History (UC-104, 106, 205); duplicate check; tag suggestion; Dept Head scoping | |
+| **2. Reference data + Asset Register** | Departments, employees, categories; Add, Edit, Search and History (UC-104, 106, 205); duplicate check; tag suggestion; Dept Head scoping | **done**. Search by issue order no. is added in Step 4. Photos use local disk storage until Step 9. |
 | **3. Movements** | Transfer with split, condition and turnover, disposal date, resignation turnover (UC-301, 302, 303) | |
 | **4. Issue Orders** | Department request, prepare IO (next 7-digit no., ISSUE movements), IO PDF in the OPC layout, history and reprint (UC-201, 202, 204) | |
 | **5. Summaries and Reports** | Department inventory report by room, Excel and PDF exports of the 3 OPC reports (UC-304, 305) | |

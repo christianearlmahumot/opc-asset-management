@@ -13,6 +13,7 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.LinkedHashMap;
@@ -25,7 +26,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ApiException.class)
     public ResponseEntity<ApiError> handleApi(ApiException ex) {
-        return ResponseEntity.status(ex.getStatus()).body(ApiError.of(ex.getStatus().value(), ex.getMessage()));
+        return ResponseEntity.status(ex.getStatus())
+                .body(new ApiError(ex.getStatus().value(), ex.getMessage(), ex.getFields(), ex.getDetails()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -35,7 +37,13 @@ public class GlobalExceptionHandler {
             fields.putIfAbsent(fe.getField(), fe.getDefaultMessage());
         }
         return ResponseEntity.badRequest()
-                .body(new ApiError(400, "Please correct the highlighted fields.", fields));
+                .body(new ApiError(400, "Please correct the highlighted fields.", fields, null));
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<ApiError> handleTooLarge(MaxUploadSizeExceededException ex) {
+        return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE)
+                .body(ApiError.of(413, "The file is too large."));
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)

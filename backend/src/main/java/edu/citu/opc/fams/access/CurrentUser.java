@@ -1,8 +1,10 @@
 package edu.citu.opc.fams.access;
 
+import edu.citu.opc.fams.common.ApiException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -13,6 +15,21 @@ public record CurrentUser(Long id, String username, String fullName, Role role, 
 
     public boolean is(Role r) {
         return role == r;
+    }
+
+    /**
+     * REQ-406: a Department Head only ever sees their own department. Returns that department for a
+     * Department Head, and null (no restriction) for every other role.
+     */
+    public Long scopedDepartmentId() {
+        return role == Role.DEPT_HEAD ? departmentId : null;
+    }
+
+    /** Throws 404 if a Department Head asks for a record of another department. */
+    public void checkCanSee(Long recordDepartmentId, String what) {
+        if (role == Role.DEPT_HEAD && !Objects.equals(departmentId, recordDepartmentId)) {
+            throw ApiException.notFound(what);   // 404, not 403: do not reveal that it exists
+        }
     }
 
     /** The user of the current request, if any. Empty during login or background jobs. */

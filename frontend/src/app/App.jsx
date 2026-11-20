@@ -5,6 +5,7 @@ import LoginPage from '../modules/auth/LoginPage'
 import ChangePasswordPage from '../modules/auth/ChangePasswordPage'
 import DashboardPage from '../modules/dashboard/DashboardPage'
 import UserManagementPage from '../modules/users/UserManagementPage'
+import AssetRoutes from '../modules/assets/AssetRoutes'
 import RequireAuth from './RequireAuth'
 import NotBuiltYet from './NotBuiltYet'
 import { NAV, ROLES } from './navigation'
@@ -28,6 +29,7 @@ export default function App() {
             }
           >
             <Route index element={<DashboardPage />} />
+            <Route path="assets/*" element={<AssetRoutes />} />
             <Route
               path="users"
               element={

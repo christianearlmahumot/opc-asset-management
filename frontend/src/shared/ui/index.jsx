@@ -1,4 +1,5 @@
 import { useId } from 'react'
+import { NavLink } from 'react-router-dom'
 import './ui.css'
 
 /*
@@ -63,6 +64,60 @@ export function Notice({ tone = 'warn', children, ...rest }) {
   )
 }
 
-export function Badge({ muted, children }) {
-  return <span className={`badge${muted ? ' badge-muted' : ''}`}>{children}</span>
+export function Badge({ muted, tone, children }) {
+  const cls = `badge${muted ? ' badge-muted' : ''}${tone ? ` badge-${tone}` : ''}`
+  return <span className={cls}>{children}</span>
+}
+
+/** Second-level tabs inside a module, e.g. Assets · Accountable Persons · Departments. */
+export function SubNav({ items }) {
+  return (
+    <nav className="subnav" aria-label="Section">
+      {items.map((i) => (
+        <NavLink key={i.to} to={i.to} end={i.end} className="subnav-item">
+          {i.label}
+        </NavLink>
+      ))}
+    </nav>
+  )
+}
+
+/** A plain native select with the field look; options are [{ value, label }]. */
+export function SelectField({ label, required, error, hint, value, onChange, options, placeholder, disabled }) {
+  return (
+    <Field label={label} required={required} error={error} hint={hint}>
+      {(id) => (
+        <select id={id} className="field-input" value={value ?? ''} onChange={onChange} disabled={disabled}
+                aria-invalid={!!error}>
+          {placeholder !== undefined && <option value="">{placeholder}</option>}
+          {options.map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
+          ))}
+        </select>
+      )}
+    </Field>
+  )
+}
+
+export function Pager({ page, totalPages, total, size, onPage }) {
+  if (!total) return null
+  const from = page * size + 1
+  const to = Math.min(total, (page + 1) * size)
+  return (
+    <div className="pager">
+      <span className="muted">
+        {from}–{to} of {total}
+      </span>
+      <div className="row" style={{ gap: 8 }}>
+        <Button variant="secondary" disabled={page === 0} onClick={() => onPage(page - 1)}>
+          Previous
+        </Button>
+        <Button variant="secondary" disabled={page + 1 >= totalPages} onClick={() => onPage(page + 1)}>
+          Next
+        </Button>
+      </div>
+    </div>
+  )
 }
