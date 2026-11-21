@@ -19,5 +19,5 @@ export const NAV = [
   { to: '/movements', label: 'Movements', roles: [ADMIN, STAFF], ready: true },
   { to: '/reports', label: 'Summaries & Reports', roles: [ADMIN, STAFF, DEPT_HEAD], ready: false, step: 5 },
   { to: '/users', label: 'Users', roles: [ADMIN], ready: true },
-  { to: '/audit-log', label: 'Audit Log', roles: [ADMIN], ready: false, step: 6 },
+  { to: '/audit-log', label: 'Audit Log', roles: [ADMIN], ready: true },
 ]

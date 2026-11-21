@@ -168,7 +168,7 @@ public class AssetService {
                 a.getDepartmentId(), codeOf(d), d == null ? null : d.getName(), a.getRoom(),
                 a.getEmployeeId(), nameOf(e),
                 a.getCondition(), a.getCondition().label(), a.getStatus(), a.getStatus().label(),
-                a.getPhotoPath() != null, a.getParentAssetId(), createdBy, a.getCreatedAt(), a.getUpdatedAt(),
+                a.getPhotoPath() != null, a.getParentAssetId(), a.getCreatedBy(), createdBy, a.getCreatedAt(), a.getUpdatedAt(),
                 io.map(IssueOrderLookup.Ref::id).orElse(null), io.map(IssueOrderLookup.Ref::ioNo).orElse(null));
     }
 
@@ -216,9 +216,7 @@ public class AssetService {
     public Asset update(Long id, AssetForm f) {
         CurrentUser me = CurrentUser.get();
         Asset a = repo.findById(id).orElseThrow(() -> ApiException.notFound("Asset"));
-        if (me.is(Role.NAS) && a.getStatus() != AssetStatus.DRAFT) {
-            throw ApiException.forbidden("NAS Assistants can only edit drafts.");
-        }
+        checkNasMayChange(me, a);
         if (a.getStatus() == AssetStatus.DISPOSED) {
             throw ApiException.badRequest("A disposed asset cannot be edited.");
         }
@@ -305,9 +303,7 @@ public class AssetService {
     public void savePhoto(Long id, MultipartFile file) throws IOException {
         CurrentUser me = CurrentUser.get();
         Asset a = repo.findById(id).orElseThrow(() -> ApiException.notFound("Asset"));
-        if (me.is(Role.NAS) && a.getStatus() != AssetStatus.DRAFT) {
-            throw ApiException.forbidden("NAS Assistants can only change drafts.");
-        }
+        checkNasMayChange(me, a);
         if (file == null || file.isEmpty()) throw ApiException.badRequest("Choose a photo.");
         if (!PHOTO_TYPES.contains(file.getContentType())) {
             throw ApiException.badRequest("The photo must be a JPG, PNG or WebP image.");
@@ -343,6 +339,13 @@ public class AssetService {
     }
 
     // ------------------------------------------------------------------ helpers
+
+    /** SRS 2.2: a NAS Assistant's entries stay drafts; they may change only the drafts they encoded themselves. */
+    private static void checkNasMayChange(CurrentUser me, Asset a) {
+        if (me.is(Role.NAS) && (a.getStatus() != AssetStatus.DRAFT || !Objects.equals(a.getCreatedBy(), me.id()))) {
+            throw ApiException.forbidden("NAS Assistants can only change drafts they encoded themselves.");
+        }
+    }
 
     private void recordEncode(Asset a) {
         String note = a.getInvoiceNo() != null ? "Encoded from invoice " + a.getInvoiceNo() : "Encoded manually";

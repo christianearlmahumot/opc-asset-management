@@ -1,5 +1,7 @@
 package edu.citu.opc.fams.access;
 
+import edu.citu.opc.fams.audit.AuditAction;
+import edu.citu.opc.fams.audit.AuditService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,16 +22,18 @@ public class BootstrapAdmin implements ApplicationRunner {
 
     private final AppUserRepository users;
     private final PasswordEncoder encoder;
+    private final AuditService audit;
     private final String username;
     private final String password;
     private final String fullName;
 
-    public BootstrapAdmin(AppUserRepository users, PasswordEncoder encoder,
+    public BootstrapAdmin(AppUserRepository users, PasswordEncoder encoder, AuditService audit,
                           @Value("${fams.bootstrap-admin.username}") String username,
                           @Value("${fams.bootstrap-admin.password}") String password,
                           @Value("${fams.bootstrap-admin.full-name}") String fullName) {
         this.users = users;
         this.encoder = encoder;
+        this.audit = audit;
         this.username = username;
         this.password = password;
         this.fullName = fullName;
@@ -45,7 +49,9 @@ public class BootstrapAdmin implements ApplicationRunner {
             log.warn("No users exist. Set ADMIN_PASSWORD (8+ characters) and restart to create the first Administrator.");
             return;
         }
-        users.save(new AppUser(username, encoder.encode(password), fullName, Role.ADMIN, null));
+        AppUser admin = users.save(new AppUser(username, encoder.encode(password), fullName, Role.ADMIN, null));
+        // REQ-404: every create is logged. No one is signed in at startup, so the user is empty (system).
+        audit.recordAs(null, AuditAction.CREATE, "app_user", admin.getId(), null, admin.auditValues());
         log.info("Created first Administrator account '{}'.", username);
     }
 }

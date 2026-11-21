@@ -115,7 +115,7 @@ Core functions come first. OCR and Excel import depend on a working asset regist
 | **3. Movements** | Transfer with split, condition and turnover, disposal date, resignation turnover (UC-301, 302, 303) | **done**. Each movement is one transaction with a row lock; each resignation item has its own transaction. |
 | **4. Issue Orders** | Department request, prepare IO (next 7-digit no., ISSUE movements), IO PDF in the OPC layout, history and reprint (UC-201, 202, 204) | **done**. Numbering starts at `IO_FIRST_NUMBER` (default 1804332). The PDF is generated on request, not stored. The Property Custodian's name comes from `PROPERTY_CUSTODIAN_NAME`. |
 | **5. Summaries and Reports** | Department inventory report by room, Excel and PDF exports of the 3 OPC reports (UC-304, 305) | |
-| **6. Audit UI** | Audit log viewer (UC-404). User management was finished in Step 1. | |
+| **6. Audit UI** | Audit log viewer (UC-404). User management was finished in Step 1. | **done**. `GET /api/audit-logs` (Admin only) reads through `AuditQueryService` (JPA criteria), so the repository still has no update or delete. Also audited now: a request becoming Fulfilled and the bootstrap admin. NAS Assistants can change only drafts they encoded. |
 | **7. Document Capture** | Upload, Tesseract OCR, review screen, NAS drafts, confirm to assets (UC-101, 102) | |
 | **8. Masterlist Import** | .xlsx preview, value mapping, set-aside rows, import batch (UC-107) | |
 | **9. Deploy** | Supabase DB and Storage, Render, GitHub Actions pg_dump backup (REQ-405) | |

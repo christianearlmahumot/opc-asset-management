@@ -46,7 +46,6 @@ public class IssueOrderService {
     private final IssueOrderRepository orders;
     private final IssueOrderLineRepository lines;
     private final RequestService requests;
-    private final DeptRequestRepository requestRepo;
     private final AssetCustodyService custody;
     private final MovementLedger ledger;
     private final DepartmentService departments;
@@ -56,14 +55,13 @@ public class IssueOrderService {
     private final String custodianName;
 
     public IssueOrderService(IssueOrderRepository orders, IssueOrderLineRepository lines, RequestService requests,
-                             DeptRequestRepository requestRepo, AssetCustodyService custody, MovementLedger ledger,
+                             AssetCustodyService custody, MovementLedger ledger,
                              DepartmentService departments, EmployeeService employees, AuditService audit,
                              @Value("${fams.issue-order.first-number}") long firstNumber,
                              @Value("${fams.issue-order.property-custodian-name:}") String custodianName) {
         this.orders = orders;
         this.lines = lines;
         this.requests = requests;
-        this.requestRepo = requestRepo;
         this.custody = custody;
         this.ledger = ledger;
         this.departments = departments;
@@ -172,8 +170,7 @@ public class IssueOrderService {
                     .note("IO " + ioNo));
         }
         if (request != null) {
-            request.fulfil(io.getId());
-            requestRepo.save(request);
+            requests.markFulfilled(request, io.getId());
         }
 
         Map<String, Object> v = new LinkedHashMap<>();

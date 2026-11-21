@@ -4,7 +4,9 @@ import org.springframework.data.repository.Repository;
 
 /**
  * Append-only by design. It extends the bare {@link Repository}, so it has no update or delete methods
- * (SDD 6.3: "no update or delete methods are exposed"). Read queries for the audit log screen are added in Step 6.
+ * (SDD 6.3: "no update or delete methods are exposed"). The audit log screen reads through
+ * {@link AuditQueryService}, not through this repository. Never add JpaSpecificationExecutor here:
+ * it brings delete(Specification).
  */
 public interface AuditLogRepository extends Repository<AuditLog, Long> {
 

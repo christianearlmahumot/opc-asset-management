@@ -9,6 +9,7 @@ import edu.citu.opc.fams.audit.AuditService;
 import edu.citu.opc.fams.common.ApiException;
 import edu.citu.opc.fams.reference.DepartmentService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.LinkedHashMap;
@@ -72,6 +73,24 @@ public class RequestService {
         r.cancel();
         audit.recordChanges("dept_request", id, Map.of("status", "PENDING"), Map.of("status", "CANCELLED"));
         return r;
+    }
+
+    /**
+     * UC-202 postcondition: the request is marked Fulfilled by its issue order. Runs inside the
+     * issue order's transaction (MANDATORY), so the status change and its audit entry (REQ-404)
+     * commit or roll back with the issue order.
+     */
+    @Transactional(propagation = Propagation.MANDATORY)
+    public void markFulfilled(DeptRequest r, Long issueOrderId) {
+        Map<String, Object> before = new LinkedHashMap<>();
+        before.put("status", r.getStatus().name());
+        before.put("issueOrderId", r.getIssueOrderId());
+        r.fulfil(issueOrderId);
+        repo.save(r);
+        Map<String, Object> after = new LinkedHashMap<>();
+        after.put("status", r.getStatus().name());
+        after.put("issueOrderId", r.getIssueOrderId());
+        audit.recordChanges("dept_request", r.getId(), before, after);
     }
 
     public List<Item> items(DeptRequest r) {

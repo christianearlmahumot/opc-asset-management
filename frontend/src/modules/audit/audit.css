@@ -1,0 +1,78 @@
+/* UI-404 View Audit Log: filters and table on the left, the opened entry on the right. */
+.audit-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 22px;
+  align-items: start;
+}
+.audit-layout.with-panel {
+  grid-template-columns: minmax(0, 1.65fr) minmax(340px, 1fr);
+}
+
+.audit-filters {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.audit-layout.with-panel .audit-filters {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.audit-active {
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.audit-summary {
+  color: var(--text-muted);
+  max-width: 360px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.audit-panel {
+  position: sticky;
+  top: calc(var(--topbar-h) + 24px);
+}
+
+.audit-meta {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 6px 12px;
+  margin: 14px 0 18px;
+}
+.audit-meta dt {
+  color: var(--text-muted);
+}
+.audit-meta dd {
+  margin: 0;
+}
+
+.audit-values td {
+  vertical-align: top;
+  word-break: break-word;
+}
+.audit-old {
+  color: var(--text-muted);
+  text-decoration: line-through;
+  text-decoration-color: var(--line-strong);
+}
+.audit-new {
+  font-weight: 500;
+}
+
+@media (max-width: 1100px) {
+  .audit-layout.with-panel {
+    grid-template-columns: 1fr;
+  }
+  .audit-panel {
+    position: static;
+  }
+  .audit-filters,
+  .audit-layout.with-panel .audit-filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

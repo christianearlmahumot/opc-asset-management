@@ -48,7 +48,7 @@ export default function AssetDetailPage() {
   const isDraft = asset.status === 'DRAFT'
   const canMove = can(['ADMIN', 'STAFF']) && !isDraft && asset.status !== 'DISPOSED'
   const canDispose = can(['ADMIN', 'STAFF']) && (asset.status === 'TURNED_OVER' || asset.status === 'IN_STORAGE')
-  const canEdit = asset.status !== 'DISPOSED' && (can(['ADMIN', 'STAFF']) || (user.role === 'NAS' && isDraft))
+  const canEdit = asset.status !== 'DISPOSED' && (can(['ADMIN', 'STAFF']) || (user.role === 'NAS' && isDraft && asset.createdById === user.id))
   const where = asset.departmentCode
     ? `${asset.departmentCode}${asset.departmentName ? ` · ${asset.departmentName}` : ''}`
     : 'OPC storage'

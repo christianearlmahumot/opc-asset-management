@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * SDD Module 2 endpoints. Role rules follow SRS 2.2:
  * search/view - everyone (Department Heads scoped to their department);
- * add - Admin, Staff, NAS (NAS as drafts); edit - Admin, Staff (NAS: own drafts); confirm - Admin, Staff.
+ * add - Admin, Staff, NAS (NAS as drafts); edit - Admin, Staff (NAS: only drafts they encoded); confirm - Admin, Staff.
  */
 @RestController
 @RequestMapping("/api/assets")

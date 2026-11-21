@@ -26,7 +26,7 @@ public final class AssetViews {
                          Long departmentId, String departmentCode, String departmentName, String room,
                          Long employeeId, String accountable,
                          AssetCondition condition, String conditionLabel, AssetStatus status, String statusLabel,
-                         boolean hasPhoto, Long parentAssetId, String createdByName,
+                         boolean hasPhoto, Long parentAssetId, Long createdById, String createdByName,
                          OffsetDateTime createdAt, OffsetDateTime updatedAt,
                          Long issueOrderId, String issueOrderNo) {
     }
