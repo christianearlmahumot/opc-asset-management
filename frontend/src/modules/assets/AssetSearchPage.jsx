@@ -66,7 +66,7 @@ export default function AssetSearchPage() {
 
   return (
     <>
-      <PageHeader title="Asset Search" subtitle="Search by keyword, property tag, serial number or accountable person"
+      <PageHeader title="Asset Search" subtitle="Search by keyword, property tag, serial number, issue order number or accountable person"
                   actions={can(['ADMIN', 'STAFF', 'NAS']) && <Button onClick={() => navigate('/assets/new')}>+ Add Asset</Button>} />
       <AssetTabs />
 

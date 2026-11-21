@@ -22,7 +22,7 @@ public final class MovementText {
         String text = switch (m.getType()) {
             case ENCODE -> join(m.getNote(), toOrStorage);
             case CONDITION -> join(condition, m.getNote());
-            case ISSUE -> "to " + to;
+            case ISSUE -> join(m.getNote(), "to " + to);
             case TRANSFER -> join(from + " → " + to, m.getNote());
             case TURNOVER -> join(join(from + " → OPC storage", reason),
                     join(condition != null && condition.equals(reason) ? null : condition, m.getNote()));

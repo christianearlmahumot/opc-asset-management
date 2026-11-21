@@ -36,4 +36,6 @@ public interface AssetRepository extends JpaRepository<Asset, Long>, JpaSpecific
     List<Asset> findByEmployeeIdAndStatusOrderByDepartmentIdAscRoomAscIdAsc(Long employeeId, AssetStatus status);
 
     List<Asset> findByParentAssetId(Long parentAssetId);
+
+    List<Asset> findByIssueOrderLineIdIn(java.util.Collection<Long> lineIds);
 }

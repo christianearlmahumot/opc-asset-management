@@ -13,7 +13,9 @@ public final class AssetViews {
     /** A row of the search results (UI-205). */
     public record Row(Long id, String propertyTagNo, String description, String serialNo, int quantity, String unit,
                       Long departmentId, String departmentCode, String room, Long employeeId, String accountable,
-                      AssetCondition condition, String conditionLabel, AssetStatus status, String statusLabel) {
+                      AssetCondition condition, String conditionLabel, AssetStatus status, String statusLabel,
+                      BigDecimal unitCost, String supplier, String invoiceNo, LocalDate acquisitionDate,
+                      boolean hasPhoto) {
     }
 
     /** Everything about one asset (asset detail page and edit form). */
@@ -25,7 +27,8 @@ public final class AssetViews {
                          Long employeeId, String accountable,
                          AssetCondition condition, String conditionLabel, AssetStatus status, String statusLabel,
                          boolean hasPhoto, Long parentAssetId, String createdByName,
-                         OffsetDateTime createdAt, OffsetDateTime updatedAt) {
+                         OffsetDateTime createdAt, OffsetDateTime updatedAt,
+                         Long issueOrderId, String issueOrderNo) {
     }
 
     /** One line of the movement history, newest first (UC-205 step 5). */

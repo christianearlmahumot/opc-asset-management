@@ -97,6 +97,11 @@ public class Asset {
         this.employeeId = employeeId;
     }
 
+    /** Links the asset to the issue order line that released it. */
+    void assignIssueOrderLine(Long lineId) {
+        this.issueOrderLineId = lineId;
+    }
+
     /**
      * Splits {@code qty} off this item as a new asset (UC-301 step 5: "splits off the transferred quantity
      * as a new item"). The new item copies the descriptive fields, has no tag or serial (those identify

@@ -15,7 +15,7 @@ export const NAV = [
   { to: '/', label: 'Dashboard', roles: null, ready: true, end: true },
   { to: '/documents', label: 'Document Capture', roles: [ADMIN, STAFF, NAS], ready: false, step: 7 },
   { to: '/assets', label: 'Asset Register', roles: [ADMIN, STAFF, NAS, DEPT_HEAD], ready: true },
-  { to: '/issue-orders', label: 'Issue Orders', roles: [ADMIN, STAFF], ready: false, step: 4 },
+  { to: '/issue-orders', label: 'Issue Orders', roles: [ADMIN, STAFF], ready: true },
   { to: '/movements', label: 'Movements', roles: [ADMIN, STAFF], ready: true },
   { to: '/reports', label: 'Summaries & Reports', roles: [ADMIN, STAFF, DEPT_HEAD], ready: false, step: 5 },
   { to: '/users', label: 'Users', roles: [ADMIN], ready: true },

@@ -42,6 +42,12 @@ fams:
     ttl-minutes: ${JWT_TTL_MINUTES:480}
   cors:
     allowed-origins: ${CORS_ORIGINS:http://localhost:5173}
+  issue-order:
+    # The first number the system issues when it has none yet. Set it to the OPC's next paper IO number.
+    first-number: ${IO_FIRST_NUMBER:1804332}
+    # Printed under "Approved by". Leave empty to print only the title.
+    property-custodian-name: ${PROPERTY_CUSTODIAN_NAME:}
+    institution: ${INSTITUTION_NAME:CEBU INSTITUTE OF TECHNOLOGY - UNIVERSITY}
   bootstrap-admin:
     # Creates the first Administrator only when the app_user table is empty.
     username: ${ADMIN_USERNAME:admin}

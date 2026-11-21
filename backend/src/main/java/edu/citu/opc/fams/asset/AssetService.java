@@ -7,6 +7,7 @@ import edu.citu.opc.fams.audit.AuditAction;
 import edu.citu.opc.fams.audit.AuditService;
 import edu.citu.opc.fams.common.ApiException;
 import edu.citu.opc.fams.common.storage.FileStorage;
+import edu.citu.opc.fams.issueorder.IssueOrderLookup;
 import edu.citu.opc.fams.movement.Movement;
 import edu.citu.opc.fams.movement.MovementLedger;
 import edu.citu.opc.fams.movement.MovementType;
@@ -55,11 +56,13 @@ public class AssetService {
     private final UnitService units;
     private final UserDirectory userDirectory;
     private final FileStorage storage;
+    private final IssueOrderLookup issueOrders;
 
     public AssetService(AssetRepository repo, DuplicateCheckService duplicates, MovementLedger ledger,
                         AuditService audit, DepartmentService departments, EmployeeService employees,
                         CategoryService categories, UnitService units, UserDirectory userDirectory,
-                        FileStorage storage) {
+                        FileStorage storage, IssueOrderLookup issueOrders) {
+        this.issueOrders = issueOrders;
         this.repo = repo;
         this.duplicates = duplicates;
         this.ledger = ledger;
@@ -98,6 +101,8 @@ public class AssetService {
         if (f.q() != null && !f.q().isBlank()) {
             String like = "%" + f.q().trim().toLowerCase(Locale.ROOT) + "%";
             List<Long> holderIds = employees.idsByName(f.q());
+            // UC-205: an issue order number (7 digits) finds every item released under it.
+            List<Long> ioLineIds = f.q().trim().matches("\\d{7}") ? issueOrders.lineIdsForIoNo(f.q().trim()) : List.of();
             specs.add((r, q, cb) -> {
                 var or = new ArrayList<jakarta.persistence.criteria.Predicate>();
                 for (String field : List.of("description", "propertyTagNo", "serialNo", "brand", "modelNo",
@@ -105,9 +110,9 @@ public class AssetService {
                     or.add(cb.like(cb.lower(r.get(field)), like));
                 }
                 if (!holderIds.isEmpty()) or.add(r.get("employeeId").in(holderIds));
+                if (!ioLineIds.isEmpty()) or.add(r.get("issueOrderLineId").in(ioLineIds));
                 return cb.or(or.toArray(jakarta.persistence.criteria.Predicate[]::new));
             });
-            // Issue order number search is added in Step 4, when issue orders exist.
         }
 
         Page<Asset> result = repo.findAll(Specification.allOf(specs),
@@ -128,7 +133,8 @@ public class AssetService {
                 a.getDepartmentId() == null ? null : codeOf(deptMap.get(a.getDepartmentId())),
                 a.getRoom(), a.getEmployeeId(),
                 a.getEmployeeId() == null ? null : nameOf(empMap.get(a.getEmployeeId())),
-                a.getCondition(), a.getCondition().label(), a.getStatus(), a.getStatus().label()));
+                a.getCondition(), a.getCondition().label(), a.getStatus(), a.getStatus().label(),
+                a.getUnitCost(), a.getSupplier(), a.getInvoiceNo(), a.getAcquisitionDate(), a.getPhotoPath() != null));
     }
 
     // ------------------------------------------------------------------ read one
@@ -153,6 +159,7 @@ public class AssetService {
         String createdBy = a.getCreatedBy() == null ? null
                 : userDirectory.namesByIds(List.of(a.getCreatedBy())).get(a.getCreatedBy());
         BigDecimal total = a.getUnitCost() == null ? null : a.getUnitCost().multiply(BigDecimal.valueOf(a.getQuantity()));
+        var io = issueOrders.orderOfLine(a.getIssueOrderLineId());
         return new AssetViews.Detail(a.getId(), a.getPropertyTagNo(), a.getDescription(), a.getCategoryId(),
                 a.getCategoryId() == null ? null : categories.names().get(a.getCategoryId()),
                 a.getBrand(), a.getModelNo(), a.getSerialNo(), a.getColor(), a.getDimension(),
@@ -161,7 +168,8 @@ public class AssetService {
                 a.getDepartmentId(), codeOf(d), d == null ? null : d.getName(), a.getRoom(),
                 a.getEmployeeId(), nameOf(e),
                 a.getCondition(), a.getCondition().label(), a.getStatus(), a.getStatus().label(),
-                a.getPhotoPath() != null, a.getParentAssetId(), createdBy, a.getCreatedAt(), a.getUpdatedAt());
+                a.getPhotoPath() != null, a.getParentAssetId(), createdBy, a.getCreatedAt(), a.getUpdatedAt(),
+                io.map(IssueOrderLookup.Ref::id).orElse(null), io.map(IssueOrderLookup.Ref::ioNo).orElse(null));
     }
 
     // ------------------------------------------------------------------ add (UC-104)

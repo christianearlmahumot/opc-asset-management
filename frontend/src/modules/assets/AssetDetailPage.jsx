@@ -102,6 +102,9 @@ export default function AssetDetailPage() {
               <Item label="Total cost" value={`₱ ${formatMoney(asset.totalCost)}`} num />
               <Item label="Supplier" value={dash(asset.supplier)} />
               <Item label="Invoice no." value={dash(asset.invoiceNo)} num />
+              <Item label="Issue order no." num value={asset.issueOrderNo
+                ? (can(['ADMIN', 'STAFF']) ? <Link to={`/issue-orders/${asset.issueOrderId}`}>{asset.issueOrderNo}</Link> : asset.issueOrderNo)
+                : '—'} />
             </dl>
           </Card>
 

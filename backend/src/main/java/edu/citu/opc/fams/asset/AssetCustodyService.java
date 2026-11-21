@@ -67,6 +67,19 @@ public class AssetCustodyService {
         audit.recordChanges("asset", a.getId(), before, a.auditValues());
     }
 
+    /** UC-202 step 6: assigns an item in OPC storage to a department and person under an issue order line. */
+    @Transactional(propagation = Propagation.MANDATORY)
+    public void issue(Asset a, Long departmentId, String room, Long employeeId, Long issueOrderLineId) {
+        var before = a.auditValues();
+        a.moveCustody(departmentId, room, employeeId);
+        a.setStatus(AssetStatus.ISSUED);
+        a.assignIssueOrderLine(issueOrderLineId);
+        var after = a.auditValues();
+        after.put("issueOrderLineId", issueOrderLineId);
+        before.put("issueOrderLineId", null);
+        audit.recordChanges("asset", a.getId(), before, after);
+    }
+
     @Transactional(propagation = Propagation.MANDATORY)
     public void setStatus(Asset a, AssetStatus status) {
         var before = a.auditValues();
@@ -89,6 +102,23 @@ public class AssetCustodyService {
         return repo.findAllById(ids).stream()
                 .map(a -> new Brief(a.getId(), a.getPropertyTagNo(), a.getDescription(), a.getUnit()))
                 .collect(Collectors.toMap(Brief::id, Function.identity()));
+    }
+
+    /** The assets released under the given issue order lines (issue order view and PDF photo page). */
+    @Transactional(readOnly = true)
+    public List<Asset> issuedUnder(Collection<Long> lineIds) {
+        if (lineIds.isEmpty()) return List.of();
+        return repo.findByIssueOrderLineIdIn(lineIds);
+    }
+
+    /** Photo bytes for the issue order PDF; null if the asset has none or it cannot be read. */
+    public byte[] photoBytes(Asset a) {
+        if (a.getPhotoPath() == null) return null;
+        try {
+            return storage.load(a.getPhotoPath());
+        } catch (IOException | RuntimeException e) {
+            return null;
+        }
     }
 
     /** The split-off part gets its own copy of the photo, so replacing one never deletes the other's. */
