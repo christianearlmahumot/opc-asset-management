@@ -38,4 +38,10 @@ public interface AssetRepository extends JpaRepository<Asset, Long>, JpaSpecific
     List<Asset> findByParentAssetId(Long parentAssetId);
 
     List<Asset> findByIssueOrderLineIdIn(java.util.Collection<Long> lineIds);
+
+    /** UC-304: the items a department currently holds. */
+    List<Asset> findByDepartmentIdAndStatusIn(Long departmentId, java.util.Collection<AssetStatus> statuses);
+
+    /** UC-304: items held by the OPC itself (no department): in storage or turned over. */
+    List<Asset> findByDepartmentIdIsNullAndStatusIn(java.util.Collection<AssetStatus> statuses);
 }

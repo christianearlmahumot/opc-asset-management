@@ -1,0 +1,192 @@
+/* UI-304 Department Inventory Report: controls and totals on screen, the report sheet on screen and paper. */
+.report-controls {
+  max-width: 460px;
+}
+
+.report-totals {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin: 22px 0 18px;
+}
+.report-total {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  padding: 14px 16px;
+}
+.report-total-label {
+  color: var(--text-muted);
+  font-size: 13px;
+}
+.report-total-value {
+  font-size: 24px;
+  font-weight: 700;
+  margin-top: 2px;
+}
+
+.report-signs-form {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+}
+.report-sign-field {
+  display: grid;
+  gap: 6px;
+  align-content: start;
+}
+
+/* ---------------------------------------------------------------- the report sheet */
+.dept-report {
+  margin-top: 22px;
+  border: 1px solid var(--line-strong);
+  padding: 22px 24px 26px;
+  background: #fff;
+  color: #111;
+  font-size: 13px;
+}
+.dept-report .dr-center {
+  text-align: center;
+}
+.dept-report .dr-inst {
+  font-weight: 700;
+  font-size: 14px;
+}
+.dept-report .dr-title {
+  font-weight: 700;
+  text-decoration: underline;
+  margin-top: 4px;
+}
+.dept-report .dr-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 16px;
+}
+.dept-report table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+}
+.dept-report th {
+  font-size: 12px;
+  text-align: left;
+  border-top: 1px solid #999;
+  border-bottom: 1px solid #999;
+  padding: 6px 4px;
+}
+.dept-report td {
+  padding: 6px 4px;
+  border-bottom: 1px solid #e2e2e2;
+  vertical-align: top;
+}
+.dept-report .r {
+  text-align: right;
+  white-space: nowrap;
+}
+.dept-report .dr-room td {
+  background: #f1ece6;
+  font-weight: 700;
+  border-bottom: 1px solid #ccc;
+  padding-top: 8px;
+}
+.dept-report .dr-subtotal td {
+  font-weight: 600;
+  border-bottom: 1px solid #bbb;
+}
+.dept-report .dr-grand td {
+  font-weight: 700;
+  border-top: 2px solid #555;
+  border-bottom: 0;
+  padding-top: 8px;
+}
+.dept-report .dr-sub {
+  color: #666;
+  font-size: 11.5px;
+  margin-top: 1px;
+}
+.dept-report .dr-link {
+  color: inherit;
+  text-decoration: none;
+}
+.dept-report .dr-link:hover {
+  color: var(--maroon);
+  text-decoration: underline;
+}
+.dept-report .dr-empty {
+  text-align: center;
+  color: #666;
+  padding: 18px 4px;
+}
+
+.dept-report .dr-signs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px 24px;
+  margin-top: 34px;
+  font-size: 12px;
+}
+.dept-report .dr-sign-label {
+  margin-bottom: 26px;
+}
+.dept-report .dr-sign-name {
+  border-bottom: 1px solid #333;
+  font-weight: 700;
+  text-align: center;
+  min-height: 18px;
+}
+.dept-report .dr-sign-title {
+  text-align: center;
+  color: #444;
+  margin-top: 2px;
+  min-height: 16px;
+}
+
+@media (max-width: 1100px) {
+  .report-totals {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .report-signs-form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ---------------------------------------------------------------- paper: only the report sheet */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 12mm;
+  }
+  body:has(.dept-report) {
+    background: #fff;
+  }
+  body:has(.dept-report) .topbar,
+  body:has(.dept-report) .sidebar,
+  body:has(.dept-report) .no-print {
+    display: none !important;
+  }
+  body:has(.dept-report) .shell {
+    display: block;
+  }
+  body:has(.dept-report) .content {
+    padding: 0;
+  }
+  .dept-report {
+    margin: 0;
+    border: 0;
+    padding: 0;
+    font-size: 11.5px;
+  }
+  .dept-report thead {
+    display: table-header-group; /* column headings repeat on every page */
+  }
+  .dept-report tr {
+    break-inside: avoid;
+  }
+  .dept-report .dr-room td {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .dept-report .dr-signs {
+    break-inside: avoid;
+  }
+}

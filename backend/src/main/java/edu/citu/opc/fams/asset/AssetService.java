@@ -260,6 +260,23 @@ public class AssetService {
         return a;
     }
 
+    // ------------------------------------------------------------------ department holdings (UC-304)
+
+    /**
+     * The items a department currently holds: issued to it, not drafts, not disposed. For the OPC
+     * itself this also includes what sits in OPC storage and the turned-over items it keeps, which
+     * have no department. Access is checked by the caller (Department Heads: own department only).
+     */
+    @Transactional(readOnly = true)
+    public List<Asset> currentInDepartment(Long departmentId) {
+        List<Asset> items = new ArrayList<>(repo.findByDepartmentIdAndStatusIn(departmentId, List.of(AssetStatus.ISSUED)));
+        boolean isOpc = departments.findOpc().map(d -> d.getId().equals(departmentId)).orElse(false);
+        if (isOpc) {
+            items.addAll(repo.findByDepartmentIdIsNullAndStatusIn(List.of(AssetStatus.IN_STORAGE, AssetStatus.TURNED_OVER)));
+        }
+        return items;
+    }
+
     // ------------------------------------------------------------------ history (UC-205)
 
     @Transactional(readOnly = true)
