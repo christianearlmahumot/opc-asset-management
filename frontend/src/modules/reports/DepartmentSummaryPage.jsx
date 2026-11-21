@@ -55,7 +55,7 @@ export default function DepartmentSummaryPage() {
         <PageHeader
           title="Department Inventory Report"
           subtitle="Current items of a department, grouped by room, as of today"
-          actions={report && <Button onClick={() => window.print()}>Print report</Button>}
+          actions={report && <Button onClick={() => printReport(report)}>Print report</Button>}
         />
 
         <Card>
@@ -114,6 +114,21 @@ export default function DepartmentSummaryPage() {
       {report && <ReportSheet report={report} signs={signs} />}
     </>
   )
+}
+
+/**
+ * The browser prints the page title in its header and uses it as the PDF file name, so give it a
+ * meaningful one while printing, e.g. "Department Inventory Report - CNAHS - 2026-11-22".
+ */
+function printReport(report) {
+  const previous = document.title
+  document.title = `Department Inventory Report - ${report.departmentCode} - ${report.asOf}`
+  const restore = () => {
+    document.title = previous
+    window.removeEventListener('afterprint', restore)
+  }
+  window.addEventListener('afterprint', restore)
+  window.print()
 }
 
 const SIGN_KEYS = [
