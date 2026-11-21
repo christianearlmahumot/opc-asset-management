@@ -36,13 +36,19 @@ public class SupabaseFileStorage implements FileStorage {
     public SupabaseFileStorage(@Value("${fams.storage.supabase.url:}") String url,
                                @Value("${fams.storage.supabase.service-key:}") String key,
                                @Value("${fams.storage.supabase.bucket:fams-files}") String bucket) {
-        if (url.isBlank() || key.isBlank() || bucket.isBlank()) {
+        url = clean(url);
+        key = clean(key);
+        bucket = clean(bucket);
+        if (url.isEmpty() || key.isEmpty() || bucket.isEmpty()) {
             throw new IllegalStateException(
                     "STORAGE_TYPE=supabase needs SUPABASE_URL, SUPABASE_SERVICE_KEY and SUPABASE_BUCKET.");
         }
+        if (!url.startsWith("https://")) {
+            throw new IllegalStateException("SUPABASE_URL must start with https:// (e.g. https://<ref>.supabase.co).");
+        }
         this.base = url.replaceAll("/+$", "") + "/storage/v1";
-        this.key = key.trim();
-        this.bucket = bucket.trim();
+        this.key = key;
+        this.bucket = bucket;
         ensurePrivateBucket();
     }
 
@@ -129,6 +135,15 @@ public class SupabaseFileStorage implements FileStorage {
             Thread.currentThread().interrupt();
             throw new IOException("Interrupted while calling Supabase Storage", e);
         }
+    }
+
+    /**
+     * Removes every space and invisible character (newline, non-breaking space, zero-width space,
+     * byte-order mark) that copy-paste into a dashboard can add. None of them is valid in a URL,
+     * key or bucket name.
+     */
+    static String clean(String s) {
+        return s == null ? "" : s.replaceAll("[\\s\\p{Z}\\p{Cf}\\p{Cc}]", "");
     }
 
     /** Encodes each path segment but keeps the slashes, e.g. assets/12/photo-ab.jpg. */
