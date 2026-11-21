@@ -1,14 +1,19 @@
 package edu.citu.opc.fams.common.storage;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-/** Development storage: files go under fams.storage.local-dir (default ./uploads, git-ignored). */
+/**
+ * Development storage: files go under fams.storage.local-dir (default ./uploads, git-ignored).
+ * Used unless fams.storage.type=supabase. Not for Render: its disk is wiped on every deploy.
+ */
 @Component
+@ConditionalOnProperty(name = "fams.storage.type", havingValue = "local", matchIfMissing = true)
 public class LocalFileStorage implements FileStorage {
 
     private final Path root;

@@ -1,0 +1,9 @@
+# Never send secrets, build output or local uploads into the image.
+.env
+.env.*
+!.env.example
+target/
+uploads/
+.idea/
+.vscode/
+*.iml

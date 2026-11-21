@@ -1,0 +1,65 @@
+# Render Blueprint: creates the back end (Docker web service) and the front end (static site).
+# In Render: New > Blueprint > pick this repository. Values marked "sync: false" are asked for
+# once in the Render dashboard; they are never stored in this file. See README "Deploy to Render".
+services:
+  # ---- Spring Boot API ------------------------------------------------------------------------
+  - type: web
+    name: opc-fams-api
+    runtime: docker
+    plan: free
+    region: singapore                 # same region as the Supabase database (SRS 2.4)
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: DB_URL                   # jdbc:postgresql://<pooler-host>:5432/postgres?sslmode=require
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: JWT_SECRET               # Render generates a random 256-bit value
+        generateValue: true
+      - key: CORS_ORIGINS             # the front end's URL, e.g. https://opc-fams-web.onrender.com
+        sync: false
+      - key: STORAGE_TYPE
+        value: supabase
+      - key: SUPABASE_URL             # https://<project-ref>.supabase.co
+        sync: false
+      - key: SUPABASE_SERVICE_KEY     # Supabase secret key; server only, never in the front end
+        sync: false
+      - key: SUPABASE_BUCKET
+        value: fams-files
+      - key: ADMIN_PASSWORD           # only used if the database has no users yet
+        sync: false
+      - key: PROPERTY_CUSTODIAN_NAME  # printed under "Approved by" on issue orders (optional)
+        sync: false
+
+  # ---- React front end ------------------------------------------------------------------------
+  - type: web
+    name: opc-fams-web
+    runtime: static
+    buildCommand: cd frontend && npm ci && npm run build
+    staticPublishPath: ./frontend/dist
+    autoDeploy: true
+    envVars:
+      - key: VITE_API_URL             # the API's URL + /api, e.g. https://opc-fams-api.onrender.com/api
+        sync: false
+      - key: NODE_VERSION
+        value: "20"
+    routes:
+      # React Router: every page path serves index.html, so reloading /assets/12 works.
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: Referrer-Policy
+        value: same-origin

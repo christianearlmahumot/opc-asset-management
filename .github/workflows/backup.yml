@@ -1,0 +1,67 @@
+# REQ-405: daily backup of the Supabase database with pg_dump. The dump is checked, encrypted with
+# a passphrase, and kept as a workflow artifact for 30 days. Restore steps are in README.md.
+#
+# Repository secrets (Settings > Secrets and variables > Actions):
+#   BACKUP_DB_HOST      e.g. aws-1-ap-southeast-1.pooler.supabase.com (Session pooler host)
+#   BACKUP_DB_USER      e.g. postgres.<project-ref>
+#   BACKUP_DB_PASSWORD  the database password
+#   BACKUP_PASSPHRASE   long random passphrase; keep a copy outside GitHub or backups cannot be opened
+name: Daily database backup
+
+on:
+  schedule:
+    - cron: "0 18 * * *"   # 18:00 UTC = 02:00 in the Philippines
+  workflow_dispatch: {}    # also runnable by hand from the Actions tab
+
+permissions:
+  contents: read
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PGHOST: ${{ secrets.BACKUP_DB_HOST }}
+      PGUSER: ${{ secrets.BACKUP_DB_USER }}
+      PGPASSWORD: ${{ secrets.BACKUP_DB_PASSWORD }}
+      PGDATABASE: postgres
+      PGPORT: "5432"
+      PGSSLMODE: require
+      PASSPHRASE: ${{ secrets.BACKUP_PASSPHRASE }}
+    steps:
+      - name: Check that the secrets are set
+        run: |
+          for v in PGHOST PGUSER PGPASSWORD PASSPHRASE; do
+            if [ -z "${!v}" ]; then echo "::error::Missing secret for $v (see the top of backup.yml)"; exit 1; fi
+          done
+
+      - name: Install the PostgreSQL 17 client (pg_dump must not be older than the server)
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq postgresql-common
+          sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y
+          sudo apt-get install -y -qq postgresql-client-17
+
+      - name: Dump the application schema
+        run: |
+          STAMP=$(date -u +%Y-%m-%dT%H%MZ)
+          echo "STAMP=$STAMP" >> "$GITHUB_ENV"
+          /usr/lib/postgresql/17/bin/pg_dump --format=custom --schema=public \
+            --no-owner --no-privileges --file "fams-$STAMP.dump"
+          # Prove the file is a readable, complete dump before keeping it.
+          /usr/lib/postgresql/17/bin/pg_restore --list "fams-$STAMP.dump" > /dev/null
+          ls -l "fams-$STAMP.dump"
+
+      - name: Encrypt (AES-256)
+        run: |
+          gpg --batch --yes --pinentry-mode loopback --passphrase "$PASSPHRASE" \
+            --symmetric --cipher-algo AES256 --output "fams-$STAMP.dump.gpg" "fams-$STAMP.dump"
+          shred -u "fams-$STAMP.dump"
+
+      - name: Keep the encrypted dump
+        uses: actions/upload-artifact@v4
+        with:
+          name: fams-backup-${{ env.STAMP }}
+          path: fams-${{ env.STAMP }}.dump.gpg
+          retention-days: 30
+          if-no-files-found: error
