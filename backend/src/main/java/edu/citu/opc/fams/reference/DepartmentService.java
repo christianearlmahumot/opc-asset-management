@@ -45,6 +45,11 @@ public class DepartmentService {
     }
 
     @Transactional(readOnly = true)
+    public Optional<Department> findByCode(String code) {
+        return code == null ? Optional.empty() : repo.findByCodeIgnoreCase(code.trim());
+    }
+
+    @Transactional(readOnly = true)
     public Optional<Department> findOpc() {
         return repo.findByCodeIgnoreCase(Department.OPC_CODE);
     }

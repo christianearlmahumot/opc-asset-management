@@ -33,17 +33,17 @@ public class IssueOrder {
     @Column(name = "employee_id") private Long employeeId;
     @Column(name = "issued_by") private Long issuedBy;
     @Column(name = "purchased_from", length = 120) private String purchasedFrom;
-    @Column(name = "invoice_no", length = 30) private String invoiceNo;
+    @Column(name = "invoice_no", length = 100) private String invoiceNo;
     @Column(name = "invoice_date") private LocalDate invoiceDate;
     @Column(name = "issued_on", nullable = false) private LocalDate issuedOn;
     @Column(length = 255) private String remarks;
     @Column(name = "pdf_path", length = 255) private String pdfPath;
     @Column(length = 80) private String room;
-    @Column(name = "issued_by_name", length = 100) private String issuedByName;
+    @Column(name = "issued_by_name", length = 150) private String issuedByName;
     @Column(name = "approved_by_name", length = 120) private String approvedByName;
     @Column(name = "noted_by_name", length = 120) private String notedByName;
     @Column(name = "noted_by_title", length = 120) private String notedByTitle;
-    @Column(name = "received_by_name", length = 120) private String receivedByName;
+    @Column(name = "received_by_name", length = 150) private String receivedByName;
     @Column(name = "received_by_title", length = 120) private String receivedByTitle;
     @Column(name = "created_at", nullable = false) private OffsetDateTime createdAt = OffsetDateTime.now();
 

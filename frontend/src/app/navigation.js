@@ -19,5 +19,6 @@ export const NAV = [
   { to: '/movements', label: 'Movements', roles: [ADMIN, STAFF], ready: true },
   { to: '/reports', label: 'Summaries & Reports', roles: [ADMIN, STAFF, DEPT_HEAD], ready: true },
   { to: '/users', label: 'Users', roles: [ADMIN], ready: true },
+  { to: '/import', label: 'Masterlist Import', roles: [ADMIN], ready: true },
   { to: '/audit-log', label: 'Audit Log', roles: [ADMIN], ready: true },
 ]

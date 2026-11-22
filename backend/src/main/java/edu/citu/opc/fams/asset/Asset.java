@@ -33,7 +33,7 @@ public class Asset {
     private Long id;
 
     @Column(name = "property_tag_no", unique = true, length = 40) private String propertyTagNo;
-    @Column(nullable = false, length = 500) private String description;
+    @Column(nullable = false, length = 2500) private String description;
     @Column(name = "category_id") private Long categoryId;
     @Column(length = 60) private String brand;
     @Column(name = "model_no", length = 60) private String modelNo;
@@ -45,7 +45,7 @@ public class Asset {
     @Column(name = "acquisition_date") private LocalDate acquisitionDate;
     @Column(name = "unit_cost", precision = 12, scale = 2) private BigDecimal unitCost;
     @Column(length = 120) private String supplier;
-    @Column(name = "invoice_no", length = 30) private String invoiceNo;
+    @Column(name = "invoice_no", length = 100) private String invoiceNo;
 
     @Column(name = "department_id") private Long departmentId;
     @Column(length = 80) private String room;

@@ -62,6 +62,10 @@ export function summarize(e) {
   const n = e.newValues ?? {}
   if (e.action === 'LOGIN_FAILED') return n.username ? `Username tried: ${n.username}` : 'Unknown username'
   if (e.action === 'LOGIN') return 'Signed in'
+  if (e.action === 'IMPORT') {
+    return [n.imported != null && `${n.imported} lines imported`, n.issueOrders != null && `${n.issueOrders} issue orders`,
+      n.setAside && `${n.setAside} set aside`, n.rejected && `${n.rejected} rejected`].filter(Boolean).join(' · ')
+  }
   if (e.action === 'EXPORT') {
     return [n.report, n.format, n.department, n.rows != null && `${n.rows} rows`].filter(Boolean).join(' · ')
   }

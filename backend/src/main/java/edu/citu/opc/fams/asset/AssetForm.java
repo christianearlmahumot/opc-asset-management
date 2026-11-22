@@ -17,7 +17,7 @@ import java.time.LocalDate;
  * On edit, departmentId / room / employeeId are ignored if unchanged and refused if changed (UC-106 3a).
  */
 public record AssetForm(
-        @NotBlank(message = "Enter the description.") @Size(max = 500) String description,
+        @NotBlank(message = "Enter the description.") @Size(max = 2500) String description,
         @NotNull(message = "Choose the category.") Long categoryId,
         @Size(max = 40, message = "Use at most 40 characters.") String propertyTagNo,
         @Size(max = 60) String brand,
@@ -34,7 +34,7 @@ public record AssetForm(
         @DecimalMin(value = "0.00", message = "The cost cannot be negative.")
         @Digits(integer = 10, fraction = 2, message = "Use at most 2 decimal places.") BigDecimal unitCost,
         @Size(max = 120) String supplier,
-        @Size(max = 30) String invoiceNo,
+        @Size(max = 100) String invoiceNo,
         Long departmentId,
         @Size(max = 80) String room,
         Long employeeId,

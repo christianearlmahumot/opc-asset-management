@@ -21,7 +21,7 @@ public class IssueOrderLine {
     @Column(name = "issue_order_id", nullable = false) private Long issueOrderId;
     @Column(nullable = false) private int quantity;
     @Column(nullable = false, length = 20) private String unit;
-    @Column(nullable = false, length = 500) private String description;
+    @Column(nullable = false, length = 2500) private String description;
     @Column(name = "unit_cost", precision = 12, scale = 2) private BigDecimal unitCost;
     @Column(name = "total_cost", precision = 14, scale = 2) private BigDecimal totalCost;
 

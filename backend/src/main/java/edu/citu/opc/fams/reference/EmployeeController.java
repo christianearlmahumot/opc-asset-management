@@ -64,7 +64,7 @@ public class EmployeeController {
 
     public record EmployeeForm(
             @Size(max = 20) String employeeNo,
-            @NotBlank(message = "Enter the full name.") @Size(max = 100) String fullName,
+            @NotBlank(message = "Enter the full name.") @Size(max = 150) String fullName,
             Long departmentId,
             Employee.Status status) {
     }

@@ -29,7 +29,7 @@ public class Employee {
     @Column(name = "employee_no", unique = true, length = 20)
     private String employeeNo;
 
-    @Column(name = "full_name", nullable = false, length = 100)
+    @Column(name = "full_name", nullable = false, length = 150)
     private String fullName;
 
     @Column(name = "department_id")
