@@ -49,10 +49,11 @@ public class AssetController {
                                              @RequestParam(required = false) AssetStatus status,
                                              @RequestParam(required = false) AssetCondition condition,
                                              @RequestParam(defaultValue = "false") boolean includeDrafts,
+                                             @RequestParam(required = false) String purchase,
                                              @RequestParam(defaultValue = "0") int page,
                                              @RequestParam(defaultValue = "25") int size) {
         return PageResult.of(service.search(
-                new AssetService.SearchFilter(q, departmentId, status, condition, includeDrafts), page, size));
+                new AssetService.SearchFilter(q, departmentId, status, condition, includeDrafts, purchase), page, size));
     }
 
     @GetMapping("/{id}")

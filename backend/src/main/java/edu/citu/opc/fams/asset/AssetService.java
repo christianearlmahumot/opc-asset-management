@@ -7,6 +7,7 @@ import edu.citu.opc.fams.audit.AuditAction;
 import edu.citu.opc.fams.audit.AuditService;
 import edu.citu.opc.fams.common.ApiException;
 import edu.citu.opc.fams.common.storage.FileStorage;
+import edu.citu.opc.fams.document.PurchaseLookup;
 import edu.citu.opc.fams.issueorder.IssueOrderLookup;
 import edu.citu.opc.fams.movement.Movement;
 import edu.citu.opc.fams.movement.MovementLedger;
@@ -57,12 +58,14 @@ public class AssetService {
     private final UserDirectory userDirectory;
     private final FileStorage storage;
     private final IssueOrderLookup issueOrders;
+    private final PurchaseLookup purchases;
 
     public AssetService(AssetRepository repo, DuplicateCheckService duplicates, MovementLedger ledger,
                         AuditService audit, DepartmentService departments, EmployeeService employees,
                         CategoryService categories, UnitService units, UserDirectory userDirectory,
-                        FileStorage storage, IssueOrderLookup issueOrders) {
+                        FileStorage storage, IssueOrderLookup issueOrders, PurchaseLookup purchases) {
         this.issueOrders = issueOrders;
+        this.purchases = purchases;
         this.repo = repo;
         this.duplicates = duplicates;
         this.ledger = ledger;
@@ -77,8 +80,9 @@ public class AssetService {
 
     // ------------------------------------------------------------------ search (UC-205)
 
+    /** {@code purchase}: a PR number; only items encoded from that purchase's documents (UC-202 step 2). */
     public record SearchFilter(String q, Long departmentId, AssetStatus status, AssetCondition condition,
-                               boolean includeDrafts) {
+                               boolean includeDrafts, String purchase) {
     }
 
     @Transactional(readOnly = true)
@@ -98,6 +102,10 @@ public class AssetService {
             specs.add((r, q, cb) -> cb.disjunction());
         }
         if (f.condition() != null) specs.add((r, q, cb) -> cb.equal(r.get("condition"), f.condition()));
+        if (f.purchase() != null && !f.purchase().isBlank()) {
+            List<Long> docIds = purchases.documentIdsForPurchase(f.purchase());
+            specs.add((r, q, cb) -> docIds.isEmpty() ? cb.disjunction() : r.get("sourceDocumentId").in(docIds));
+        }
         if (f.q() != null && !f.q().isBlank()) {
             String like = "%" + f.q().trim().toLowerCase(Locale.ROOT) + "%";
             List<Long> holderIds = employees.idsByName(f.q());
@@ -169,13 +177,20 @@ public class AssetService {
                 a.getEmployeeId(), nameOf(e),
                 a.getCondition(), a.getCondition().label(), a.getStatus(), a.getStatus().label(),
                 a.getPhotoPath() != null, a.getParentAssetId(), a.getCreatedBy(), createdBy, a.getCreatedAt(), a.getUpdatedAt(),
-                io.map(IssueOrderLookup.Ref::id).orElse(null), io.map(IssueOrderLookup.Ref::ioNo).orElse(null));
+                io.map(IssueOrderLookup.Ref::id).orElse(null), io.map(IssueOrderLookup.Ref::ioNo).orElse(null),
+                a.getSourceDocumentId());
     }
 
     // ------------------------------------------------------------------ add (UC-104)
 
     @Transactional
     public Asset create(AssetForm f) {
+        return create(f, null);
+    }
+
+    /** UC-102 step 7: an item confirmed from a purchasing document keeps the link to that document. */
+    @Transactional
+    public Asset create(AssetForm f, Long sourceDocumentId) {
         CurrentUser me = CurrentUser.get();
         String tag = blankToNull(f.propertyTagNo());
         String unit = units.normalize(f.unit());
@@ -187,6 +202,7 @@ public class AssetService {
         applyDescriptiveFields(a, f, tag, unit);
         a.placeInitially(f.departmentId(), blankToNull(f.room()), f.employeeId());
         a.setCondition(f.condition());
+        if (sourceDocumentId != null) a.linkSourceDocument(sourceDocumentId);
         // A NAS Assistant's entries stay as drafts until Property Staff confirm them (SRS 2.2).
         a.setStatus(me.is(Role.NAS) ? AssetStatus.DRAFT : activeStatusFor(a));
         repo.save(a);
@@ -283,6 +299,12 @@ public class AssetService {
         Map<Long, Asset> m = new java.util.HashMap<>();
         for (Asset a : repo.findAllById(ids)) m.put(a.getId(), a);
         return m;
+    }
+
+    /** UC-102: the items encoded from a purchasing document (the caller checks access). */
+    @Transactional(readOnly = true)
+    public List<Asset> fromDocument(Long documentId) {
+        return repo.findBySourceDocumentIdOrderByIdAsc(documentId);
     }
 
     // ------------------------------------------------------------------ history (UC-205)

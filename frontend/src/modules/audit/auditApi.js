@@ -54,6 +54,7 @@ export function recordLink(entity, id) {
   if (id == null) return null
   if (entity === 'asset') return `/assets/${id}`
   if (entity === 'issue_order') return `/issue-orders/${id}`
+  if (entity === 'source_document') return `/documents/${id}`
   return null
 }
 

@@ -105,6 +105,9 @@ export default function AssetDetailPage() {
               <Item label="Issue order no." num value={asset.issueOrderNo
                 ? (can(['ADMIN', 'STAFF']) ? <Link to={`/issue-orders/${asset.issueOrderId}`}>{asset.issueOrderNo}</Link> : asset.issueOrderNo)
                 : '—'} />
+              {asset.sourceDocumentId && can(['ADMIN', 'STAFF', 'NAS']) && (
+                <Item label="Encoded from" value={<Link to={`/documents/${asset.sourceDocumentId}`}>Purchasing document</Link>} />
+              )}
             </dl>
           </Card>
 

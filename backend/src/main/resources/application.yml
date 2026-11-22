@@ -59,6 +59,10 @@ fams:
     # Printed under "Approved by". Leave empty to print only the title.
     property-custodian-name: ${PROPERTY_CUSTODIAN_NAME:}
     institution: ${INSTITUTION_NAME:CEBU INSTITUTE OF TECHNOLOGY - UNIVERSITY}
+  ocr:
+    # Folder with <language>.traineddata. Empty: the Docker image's Tesseract, else ./tessdata.
+    tessdata: ${OCR_TESSDATA:}
+    language: ${OCR_LANGUAGE:eng}
   bootstrap-admin:
     # Creates the first Administrator only when the app_user table is empty.
     username: ${ADMIN_USERNAME:admin}

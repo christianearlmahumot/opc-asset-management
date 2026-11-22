@@ -28,7 +28,7 @@ public final class AssetViews {
                          AssetCondition condition, String conditionLabel, AssetStatus status, String statusLabel,
                          boolean hasPhoto, Long parentAssetId, Long createdById, String createdByName,
                          OffsetDateTime createdAt, OffsetDateTime updatedAt,
-                         Long issueOrderId, String issueOrderNo) {
+                         Long issueOrderId, String issueOrderNo, Long sourceDocumentId) {
     }
 
     /** One line of the movement history, newest first (UC-205 step 5). */

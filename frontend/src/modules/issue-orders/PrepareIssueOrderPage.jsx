@@ -30,6 +30,7 @@ export default function PrepareIssueOrderPage() {
   const [people, setPeople] = useState([])
   const [stock, setStock] = useState([])
   const [q, setQ] = useState('')
+  const [matchOnly, setMatchOnly] = useState(false) // UC-202 step 2: items from the request's purchase
   const [picked, setPicked] = useState({}) // assetId -> qty (string)
   const [form, setForm] = useState({ employeeId: '', room: '', notedByName: '', notedByTitle: 'Dean', receivedByTitle: '', remarks: '' })
   const [nextNo, setNextNo] = useState(null)
@@ -47,6 +48,7 @@ export default function PrepareIssueOrderPage() {
         if (r) {
           setRequest(r)
           setDeptId(String(r.departmentId))
+          setMatchOnly(Boolean(r.prNo && r.documents?.length))
           if (r.status !== 'PENDING') setError(`This request is already ${r.status.toLowerCase()}.`)
         }
       })
@@ -72,11 +74,13 @@ export default function PrepareIssueOrderPage() {
   // Items in OPC storage, searchable.
   useEffect(() => {
     const t = setTimeout(() => {
-      assetsApi.search({ status: 'IN_STORAGE', q: q || undefined, size: 100 })
-        .then((r) => setStock(r.items)).catch((e) => setError(e.message))
+      assetsApi.search({
+        status: 'IN_STORAGE', q: q || undefined, size: 100,
+        purchase: matchOnly && request?.prNo ? request.prNo : undefined,
+      }).then((r) => setStock(r.items)).catch((e) => setError(e.message))
     }, 250)
     return () => clearTimeout(t)
-  }, [q])
+  }, [q, matchOnly, request])
 
   const pickedRows = useMemo(() => {
     const byId = Object.fromEntries(stock.map((a) => [a.id, a]))
@@ -195,6 +199,18 @@ export default function PrepareIssueOrderPage() {
               <ul className="requested">
                 {request.items.map((i, k) => <li key={k}>{i.quantity} × {i.description}</li>)}
               </ul>
+              {request.documents?.length > 0 && (
+                <div className="purchase-docs">
+                  <span className="muted">Documents of {request.prNo}: </span>
+                  {request.documents.map((d) => (
+                    <Link key={d.id} to={`/documents/${d.id}`}>{d.typeLabel} {d.docNo}</Link>
+                  )).reduce((acc, el, k) => (k ? [...acc, ' · ', el] : [el]), [])}
+                  <label className="purchase-only">
+                    <input type="checkbox" checked={matchOnly} onChange={(e) => setMatchOnly(e.target.checked)} />
+                    {' '}Show only items from this purchase
+                  </label>
+                </div>
+              )}
             </div>
           )}
           {!request && (

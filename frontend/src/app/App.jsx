@@ -7,6 +7,7 @@ import DashboardPage from '../modules/dashboard/DashboardPage'
 import UserManagementPage from '../modules/users/UserManagementPage'
 import AuditLogPage from '../modules/audit/AuditLogPage'
 import ImportPage from '../modules/import/ImportPage'
+import DocumentRoutes from '../modules/documents/DocumentRoutes'
 import ReportRoutes from '../modules/reports/ReportRoutes'
 import AssetRoutes from '../modules/assets/AssetRoutes'
 import MovementRoutes from '../modules/movements/MovementRoutes'
@@ -64,6 +65,14 @@ export default function App() {
               element={
                 <RequireAuth roles={[ROLES.ADMIN, ROLES.STAFF, ROLES.DEPT_HEAD]}>
                   <ReportRoutes />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="documents/*"
+              element={
+                <RequireAuth roles={[ROLES.ADMIN, ROLES.STAFF, ROLES.NAS]}>
+                  <DocumentRoutes />
                 </RequireAuth>
               }
             />

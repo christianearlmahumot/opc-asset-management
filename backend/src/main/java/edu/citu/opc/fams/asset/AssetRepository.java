@@ -37,6 +37,9 @@ public interface AssetRepository extends JpaRepository<Asset, Long>, JpaSpecific
 
     List<Asset> findByParentAssetId(Long parentAssetId);
 
+    /** UC-102: the items encoded from one purchasing document. */
+    List<Asset> findBySourceDocumentIdOrderByIdAsc(Long sourceDocumentId);
+
     List<Asset> findByIssueOrderLineIdIn(java.util.Collection<Long> lineIds);
 
     /** UC-304: the items a department currently holds. */

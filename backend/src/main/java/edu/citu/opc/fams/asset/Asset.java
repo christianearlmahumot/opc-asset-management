@@ -97,6 +97,11 @@ public class Asset {
         this.employeeId = employeeId;
     }
 
+    /** UC-102: the purchasing document the item was encoded from. */
+    void linkSourceDocument(Long documentId) {
+        this.sourceDocumentId = documentId;
+    }
+
     /** Links the asset to the issue order line that released it. */
     void assignIssueOrderLine(Long lineId) {
         this.issueOrderLineId = lineId;

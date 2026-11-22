@@ -103,3 +103,13 @@
   text-align: center;
   padding: 26px 0;
 }
+
+/* UC-201 / UC-202: the uploaded documents of the request's purchase. */
+.purchase-docs {
+  margin-top: 10px;
+  font-size: 14px;
+}
+.purchase-only {
+  display: block;
+  margin-top: 6px;
+}

@@ -37,3 +37,6 @@ build/
 
 ### uploaded files (dev storage) ###
 uploads/
+
+### Tesseract language data for local OCR (downloaded, not committed) ###
+tessdata/

@@ -13,7 +13,7 @@ const { ADMIN, STAFF, NAS, DEPT_HEAD } = ROLES
 
 export const NAV = [
   { to: '/', label: 'Dashboard', roles: null, ready: true, end: true },
-  { to: '/documents', label: 'Document Capture', roles: [ADMIN, STAFF, NAS], ready: false, step: 7 },
+  { to: '/documents', label: 'Document Capture', roles: [ADMIN, STAFF, NAS], ready: true },
   { to: '/assets', label: 'Asset Register', roles: [ADMIN, STAFF, NAS, DEPT_HEAD], ready: true },
   { to: '/issue-orders', label: 'Issue Orders', roles: [ADMIN, STAFF], ready: true },
   { to: '/movements', label: 'Movements', roles: [ADMIN, STAFF], ready: true },
