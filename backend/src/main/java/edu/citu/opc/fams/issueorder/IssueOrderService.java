@@ -203,7 +203,37 @@ public class IssueOrderService {
 
     @Transactional(readOnly = true)
     public Page<IssueOrder> search(Filter f, int page, int size) {
-        Specification<IssueOrder> spec = (root, q, cb) -> {
+        return orders.findAll(spec(f), PageRequest.of(Math.max(page, 0), Math.min(Math.max(size, 1), 100),
+                Sort.by(Sort.Direction.DESC, "issuedOn").and(Sort.by(Sort.Direction.DESC, "ioNo"))));
+    }
+
+    /** One row of the Masterlist of Issue Orders: an issue order line with its order. */
+    public record MasterlistLine(IssueOrder order, IssueOrderLine line) {
+    }
+
+    /**
+     * UC-305: every issue order line matching the filter, in issue order number order, one row per line
+     * as in the OPC's Excel masterlist.
+     */
+    @Transactional(readOnly = true)
+    public List<MasterlistLine> masterlist(Filter f) {
+        List<IssueOrder> found = orders.findAll(spec(f), Sort.by(Sort.Direction.ASC, "ioNo"));
+        Map<Long, List<IssueOrderLine>> byOrder = new LinkedHashMap<>();
+        List<Long> ids = found.stream().map(IssueOrder::getId).toList();
+        for (int i = 0; i < ids.size(); i += 1000) {   // keep each IN list well under the driver's limit
+            for (IssueOrderLine l : lines.findByIssueOrderIdInOrderByIdAsc(ids.subList(i, Math.min(i + 1000, ids.size())))) {
+                byOrder.computeIfAbsent(l.getIssueOrderId(), k -> new ArrayList<>()).add(l);
+            }
+        }
+        List<MasterlistLine> rows = new ArrayList<>();
+        for (IssueOrder o : found) {
+            for (IssueOrderLine l : byOrder.getOrDefault(o.getId(), List.of())) rows.add(new MasterlistLine(o, l));
+        }
+        return rows;
+    }
+
+    private static Specification<IssueOrder> spec(Filter f) {
+        return (root, q, cb) -> {
             List<Predicate> p = new ArrayList<>();
             if (f.ioNo() != null && !f.ioNo().isBlank()) p.add(cb.like(root.get("ioNo"), f.ioNo().trim() + "%"));
             if (f.departmentId() != null) p.add(cb.equal(root.get("departmentId"), f.departmentId()));
@@ -211,8 +241,6 @@ public class IssueOrderService {
             if (f.to() != null) p.add(cb.lessThanOrEqualTo(root.get("issuedOn"), f.to()));
             return cb.and(p.toArray(Predicate[]::new));
         };
-        return orders.findAll(spec, PageRequest.of(Math.max(page, 0), Math.min(Math.max(size, 1), 100),
-                Sort.by(Sort.Direction.DESC, "issuedOn").and(Sort.by(Sort.Direction.DESC, "ioNo"))));
     }
 
     @Transactional(readOnly = true)

@@ -10,6 +10,9 @@ public interface IssueOrderLineRepository extends JpaRepository<IssueOrderLine, 
 
     List<IssueOrderLine> findByIssueOrderIdOrderByIdAsc(Long issueOrderId);
 
+    /** UC-305 masterlist export: the lines of many orders at once. */
+    List<IssueOrderLine> findByIssueOrderIdInOrderByIdAsc(Collection<Long> issueOrderIds);
+
     @Query("select l.issueOrderId, count(l) from IssueOrderLine l where l.issueOrderId in :ids group by l.issueOrderId")
     List<Object[]> countByOrders(Collection<Long> ids);
 

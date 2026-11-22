@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 
+import java.util.Collection;
 import java.util.List;
 
 /** Append-only: movements are saved and read, never updated or deleted. */
@@ -13,6 +14,11 @@ public interface MovementRepository extends Repository<Movement, Long> {
     Movement save(Movement m);
 
     List<Movement> findByAssetIdOrderByRecordedAtDescIdDesc(Long assetId);
+
+    /** UC-305 Inventory of Turned-over Items. */
+    List<Movement> findByTypeInOrderByDateReturnedAscIdAsc(Collection<MovementType> types);
+
+    List<Movement> findByTypeAndAssetIdIn(MovementType type, Collection<Long> assetIds);
 
     /** Recent movements for the Movements page, optionally by type and by department (from or to). */
     @Query(value = """

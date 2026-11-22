@@ -4,6 +4,7 @@ import { useAuth } from '../auth/AuthContext'
 import { referenceApi } from '../reference/referenceApi'
 import { Button, Card, Field, Notice, PageHeader } from '../../shared/ui'
 import { formatMoney } from '../../shared/format'
+import ReportTabs from './ReportTabs'
 import { reportsApi } from './reportsApi'
 import './reports.css'
 
@@ -57,7 +58,7 @@ export default function DepartmentSummaryPage() {
           subtitle="Current items of a department, grouped by room, as of today"
           actions={report && <Button onClick={() => printReport(report)}>Print report</Button>}
         />
-
+        <ReportTabs />
         <Card>
           <div className="report-controls">
             <Field label="Department">

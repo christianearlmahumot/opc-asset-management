@@ -277,6 +277,14 @@ public class AssetService {
         return items;
     }
 
+    /** UC-305: the assets with these ids. The caller checks access (exports are Admin and Staff only). */
+    @Transactional(readOnly = true)
+    public Map<Long, Asset> byIds(java.util.Collection<Long> ids) {
+        Map<Long, Asset> m = new java.util.HashMap<>();
+        for (Asset a : repo.findAllById(ids)) m.put(a.getId(), a);
+        return m;
+    }
+
     // ------------------------------------------------------------------ history (UC-205)
 
     @Transactional(readOnly = true)

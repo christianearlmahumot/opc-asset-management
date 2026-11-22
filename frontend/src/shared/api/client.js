@@ -50,9 +50,17 @@ export function setUnauthorizedHandler(fn) {
 
 api.interceptors.response.use(
   (res) => res,
-  (err) => {
+  async (err) => {
     const status = err.response?.status
-    const body = err.response?.data
+    let body = err.response?.data
+    // File downloads ask for a blob, so a JSON error message arrives as a blob too: read it.
+    if (body instanceof Blob && body.type.includes('json')) {
+      try {
+        body = JSON.parse(await body.text())
+      } catch {
+        body = null
+      }
+    }
     if (status === 401 && !err.config?.url?.endsWith('/auth/login')) {
       onUnauthorized()
     }

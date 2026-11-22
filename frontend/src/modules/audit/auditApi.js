@@ -30,6 +30,7 @@ const ENTITY_LABELS = {
   movement: 'Movement',
   import_batch: 'Masterlist import',
   source_document: 'Purchasing document',
+  report: 'Report',
 }
 
 export const actionLabel = (a) => ACTIONS.find((x) => x.value === a)?.label ?? a
@@ -61,6 +62,9 @@ export function summarize(e) {
   const n = e.newValues ?? {}
   if (e.action === 'LOGIN_FAILED') return n.username ? `Username tried: ${n.username}` : 'Unknown username'
   if (e.action === 'LOGIN') return 'Signed in'
+  if (e.action === 'EXPORT') {
+    return [n.report, n.format, n.department, n.rows != null && `${n.rows} rows`].filter(Boolean).join(' · ')
+  }
   if (e.action === 'UPDATE') {
     const keys = Object.keys(n)
     return keys.length ? `Changed: ${keys.map(fieldLabel).join(', ')}` : 'Updated'
